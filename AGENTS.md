@@ -10,11 +10,11 @@
 - **フレームワーク**: Next.js (v16.2) App Routerを使用。
 - **パッケージマネージャー**: `pnpm` (run tasks using `pnpm dev`, `pnpm build`, `pnpm start`, `pnpm lint`).
 - **ポート**: デフォルトのポートは **3005** に設定されています (`pnpm dev -p 3005`)。
-- **インポート**: パスエイリアス `@/*` はプロジェクトのルート `./*` を指します（[tsconfig.json](file:///Users/temmy/budget-lens/budget-lens/tsconfig.json) で定義）。
+- **インポート**: パスエイリアス `@/*` は `src` ディレクトリ `./src/*` を指します（[tsconfig.json](file:///Users/temmy/budget-lens/budget-lens/tsconfig.json) で定義）。
 
 ## 1. スタイリング (Tailwind CSS v4)
 - このプロジェクトでは **Tailwind CSS v4** を使用しています。
-- グローバルスタイルおよび設定は [globals.css](file:///Users/temmy/budget-lens/budget-lens/app/globals.css) にあります。
+- グローバルスタイルおよび設定は [globals.css](file:///Users/temmy/budget-lens/budget-lens/src/app/globals.css) にあります。
 - **`tailwind.config.js` は存在しません。** テーマの設定は、CSS内の `@theme inline` を使用して直接定義されています：
   ```css
   @theme inline {

@@ -27,19 +27,19 @@
 ## プロジェクトの規約
 
 ### インポートと TypeScript 設定
-- 本プロジェクトでは `src/` ディレクトリは使用せず、プロジェクトのルートディレクトリが基準になります。
+- 本プロジェクトでは `src/` ディレクトリを使用し、`src/` 以下が基準になります。
 - `tsconfig.json` の `paths` オプションを使用して、モジュールパスをエイリアス（"alias"）しています。
-- エイリアス `@/*` はプロジェクトのルート `./*` を指すように設定されています。
-  - 例: `import Layout from "@/app/layout"` など
-  - 例: プロジェクトのルートに `components/` ディレクトリを作成した場合、以下のようにインポートできます。
+- エイリアス `@/*` は `src/` ディレクトリ（`./src/*`）を指すように設定されています。
+  - 例: `import Layout from "@/app/layout"` など（`src/app/layout` を指します）
+  - 例: `src/components/` ディレクトリを作成した場合、以下のようにインポートできます。
     ```typescript
     import { Button } from "@/components/button";
     ```
 
 ### スタイリング (Tailwind CSS v4)
-- グローバルスタイルおよび構成は [globals.css](file:///Users/temmy/budget-lens/budget-lens/app/globals.css) に記述されています。
+- グローバルスタイルおよび構成は [globals.css](file:///Users/temmy/budget-lens/budget-lens/src/app/globals.css) に記述されています。
 - **注意**: Tailwind CSS v4 が導入されており、テーマのカスタマイズは CSS ファイル内の `@theme inline` ブロックで定義されます。**`tailwind.config.js` や `tailwind.config.ts` は作成しないでください。**
 
 ### ルーティングとナビゲーション
-- Next.js の App Router を使用しています（[app/](file:///Users/temmy/budget-lens/budget-lens/app) ディレクトリ以下）。
+- Next.js の App Router を使用しています（[src/app/](file:///Users/temmy/budget-lens/budget-lens/src/app) ディレクトリ以下）。
 - クライアントサイドの遷移（ナビゲーション）が遅い問題を修正する場合は、`Suspense` だけでは不十分です。ルートページから `unstable_instant` をエクスポートする必要があります。詳細は `node_modules/next/dist/docs/01-app/02-guides/instant-navigation.md` を参照してください。
