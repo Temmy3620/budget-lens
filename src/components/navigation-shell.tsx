@@ -1,0 +1,27 @@
+"use client";
+
+import { useState } from "react";
+import Header from "./navigation/header";
+import Sidebar from "./navigation/sidebar";
+
+interface NavigationShellProps {
+	children: React.ReactNode;
+	userEmail?: string;
+}
+
+export default function NavigationShell({
+	children,
+	userEmail,
+}: NavigationShellProps) {
+	const [isOpen, setIsOpen] = useState(false);
+
+	return (
+		<div className="min-h-screen bg-[#030616] text-white flex flex-col">
+			<Header isOpen={isOpen} setIsOpen={setIsOpen} userEmail={userEmail} />
+			<Sidebar isOpen={isOpen} setIsOpen={setIsOpen} userEmail={userEmail} />
+
+			{/* メインコンテンツエリア */}
+			<div className="flex-1 flex flex-col relative z-0">{children}</div>
+		</div>
+	);
+}
