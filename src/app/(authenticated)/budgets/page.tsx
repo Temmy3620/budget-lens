@@ -1,49 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CategoryList } from "@/components/budgets/category-list";
 import { BudgetForm } from "@/components/budgets/budget-form";
+import { BudgetsSkeleton } from "@/components/budgets/page-skeleton";
 import type { BudgetSetting } from "@/components/budgets/types";
+import { getBudgets } from "@/lib/budgets";
 
 export default function BudgetsPage() {
 	// 初期の設定済みカテゴリと予算のリスト (ステートで管理)
-	const [settings, setSettings] = useState<BudgetSetting[]>([
-		{
-			id: "food",
-			name: "食費",
-			budget: 80000,
-			color: "from-orange-500 to-amber-400",
-		},
-		{
-			id: "rent",
-			name: "住宅・光熱費",
-			budget: 120000,
-			color: "from-blue-500 to-indigo-400",
-		},
-		{
-			id: "transport",
-			name: "交通費",
-			budget: 20000,
-			color: "from-cyan-500 to-teal-400",
-		},
-		{
-			id: "entertainment",
-			name: "娯楽・エンタメ",
-			budget: 30000,
-			color: "from-purple-500 to-pink-400",
-		},
-		{
-			id: "others",
-			name: "その他・雑費",
-			budget: 50000,
-			color: "from-emerald-500 to-green-400",
-		},
-	]);
+	const [settings, setSettings] = useState<BudgetSetting[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	// 編集中のステート
 	const [editingSetting, setEditingSetting] = useState<BudgetSetting | null>(
 		null,
 	);
+
+	useEffect(() => {
+		async function loadBudgets() {
+			try {
+				const data = await getBudgets();
+				setSettings(data);
+			} catch (error) {
+				console.error("Failed to load budgets:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		}
+		loadBudgets();
+	}, []);
 
 	// 予算の保存（追加または更新）
 	const handleSave = (name: string, budget: number, color: string) => {
@@ -87,6 +73,10 @@ export default function BudgetsPage() {
 
 	// 合計予算額
 	const totalBudget = settings.reduce((sum, item) => sum + item.budget, 0);
+
+	if (isLoading) {
+		return <BudgetsSkeleton />;
+	}
 
 	return (
 		<main className="flex-1 p-6 md:p-10 max-w-6xl mx-auto w-full space-y-8 animate-fade-in">
