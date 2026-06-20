@@ -4,6 +4,7 @@
 
 ## 0. AIへの指示 (AI Instructions)
 - **応答言語**: ユーザーへの回答や対話は、原則として**常に日本語**で行ってください。(Please always respond to the user in Japanese.)
+- **コードフォーマットの徹底**: コードの記述や修正を行った後は、完了する前に必ずフォーマッタやLinter（`pnpm format:biome` や `pnpm lint` など）を実行し、コードを綺麗に整形・チェックしてください。
 
 ## 主要な技術スタックとバージョン
 - **Next.js**: v16.2.9 (App Router 使用)
@@ -21,6 +22,7 @@
 - **本番用ビルド**: `pnpm build`
 - **本番サーバー起動**: `pnpm start` （ポート `3005` で起動）
 - **静的解析 (Linter)**: `pnpm lint`
+- **コード整形 (Biome)**: `pnpm format:biome` (または `pnpm lint:biome`)
 
 ## プロジェクトの規約
 
