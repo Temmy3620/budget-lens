@@ -8,9 +8,14 @@
 		"start": "next start -p 3005",
 		"lint": "eslint",
 		"lint:biome": "biome check",
-		"format:biome": "biome format --write"
+		"format:biome": "biome format --write",
+		"supabase:link": "npx supabase link --project-ref $SUPABASE_PROJECT_ID",
+		"supabase:login": "npx supabase login",
+		"supabase:deploy": "npx supabase db push",
+		"supabase:seed": "npx supabase db query --linked --file supabase/seed.sql"
 	},
 	"dependencies": {
+		"@supabase/supabase-js": "^2.108.2",
 		"next": "16.2.9",
 		"react": "19.2.4",
 		"react-dom": "19.2.4"

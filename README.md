@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Budget Lens
 
-## Getting Started
+予算の管理と可視化を行う Next.js アプリケーションです。
 
-First, run the development server:
+## 🚀 開発サーバーの起動
+
+開発サーバーをポート `3005` で起動します。
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3005](http://localhost:3005) with your browser to see the result.
+起動後、ブラウザで [http://localhost:3005](http://localhost:3005) を開いて確認できます。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ⚡ Supabase 開発・管理コマンド
 
-## Learn More
+プロジェクトには、Supabase と連携するための各種コマンドが定義されています。
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Supabase CLI へのログイン
+Supabase アカウントと連携するためにログインを行います。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm supabase:login
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. リモートプロジェクトとの紐付け
+リモートの Supabase プロジェクトとローカル環境をリンクします。実行前に環境変数 `SUPABASE_PROJECT_ID` にプロジェクトの参照IDを設定してください。
 
-## Deploy on Vercel
+```bash
+# プロジェクトIDを設定してからリンクを実行
+export SUPABASE_PROJECT_ID="あなたのプロジェクトID"
+pnpm supabase:link
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. マイグレーションのデプロイ
+ローカルで作成したマイグレーションファイル（`supabase/migrations/` 内）をリモートデータベースへ反映します。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm supabase:deploy
+```
+
+### 4. シードデータの投入
+テスト用のユーザー情報（`supabase/seed.sql` 内）をリモートデータベースに直接流し込みます。
+
+```bash
+pnpm supabase:seed
+```
+
+---
+
+## 🔑 シードデータのパスワード設定方法
+
+`supabase/seed.sql` に設定するパスワードは、セキュリティのために **SHA-256** でハッシュ化されたものである必要があります。
+
+### ハッシュ値の生成手順
+ターミナルで以下のコマンドを実行し、生成された64文字の文字列を `supabase/seed.sql` の `password_hash` 列の値に設定してください。
+
+```bash
+node -e "console.log(require('crypto').createHash('sha256').update('設定したい平文パスワード').digest('hex'))"
+```
+
+---
+
+## 🛠️ 技術スタック
+- **Framework**: Next.js v16.2 (App Router)
+- **Runtime / Package Manager**: Node.js & pnpm
+- **Styling**: Tailwind CSS v4 (globals.css 内の `@theme inline` でカスタマイズ)
+- **Database / Backend**: Supabase
