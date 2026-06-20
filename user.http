@@ -1,0 +1,8 @@
+### REST Client テスト用ファイル - ユーザー管理 API (User API)
+
+@baseUrl = http://localhost:3005
+
+### 1. ユーザー一覧の取得
+# @name getUsers
+GET {{baseUrl}}/api/user
+Accept: application/json
