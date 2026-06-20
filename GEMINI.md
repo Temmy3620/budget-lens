@@ -27,8 +27,14 @@
 ## プロジェクトの規約
 
 ### インポートと TypeScript 設定
-- ルートパスのエイリアスは `@/*` で、プロジェクトのルートディレクトリ `./*` を指します（[tsconfig.json](file:///Users/temmy/budget-lens/budget-lens/tsconfig.json) を参照）。
+- 本プロジェクトでは `src/` ディレクトリは使用せず、プロジェクトのルートディレクトリが基準になります。
+- `tsconfig.json` の `paths` オプションを使用して、モジュールパスをエイリアス（"alias"）しています。
+- エイリアス `@/*` はプロジェクトのルート `./*` を指すように設定されています。
   - 例: `import Layout from "@/app/layout"` など
+  - 例: プロジェクトのルートに `components/` ディレクトリを作成した場合、以下のようにインポートできます。
+    ```typescript
+    import { Button } from "@/components/button";
+    ```
 
 ### スタイリング (Tailwind CSS v4)
 - グローバルスタイルおよび構成は [globals.css](file:///Users/temmy/budget-lens/budget-lens/app/globals.css) に記述されています。
