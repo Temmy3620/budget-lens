@@ -18,6 +18,9 @@ export default function ExpensesClient() {
 	// 表示対象の年月 (YYYY-MM 形式)
 	const [currentMonth, setCurrentMonth] = useState("");
 
+	// 実行時の「今月」 (YYYY-MM 形式)
+	const [thisMonth, setThisMonth] = useState("");
+
 	// モーダルの表示状態
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -52,12 +55,12 @@ export default function ExpensesClient() {
 
 				// 初期年月とフォーム日付をクライアントマウント時にセット
 				setCurrentMonth(`${yyyy}-${mm}`);
+				setThisMonth(`${yyyy}-${mm}`);
 				setDateInput(`${yyyy}-${mm}-${dd}`);
 
-				// 日付入力の制限範囲（今月の初日から末日）を設定
-				const lastDay = new Date(yyyy, now.getMonth() + 1, 0).getDate();
-				setMinDate(`${yyyy}-${mm}-01`);
-				setMaxDate(`${yyyy}-${mm}-${String(lastDay).padStart(2, "0")}`);
+				// 日付入力の制限をなくす（過去・未来を自由に選べるように空に設定）
+				setMinDate("");
+				setMaxDate("");
 			} catch (error) {
 				console.error("Failed to load data:", error);
 			} finally {
@@ -93,6 +96,14 @@ export default function ExpensesClient() {
 		expense.date.startsWith(currentMonth),
 	);
 
+	// 来月以降の予想出費（実際の今月より未来のデータ）を抽出
+	const upcomingExpenses = expenses
+		.filter((expense) => {
+			const expenseMonth = expense.date.slice(0, 7);
+			return expenseMonth > thisMonth;
+		})
+		.sort((a, b) => a.date.localeCompare(b.date));
+
 	// 当月の総支出額
 	const totalSpent = filteredExpenses.reduce(
 		(sum, item) => sum + item.amount,
@@ -126,10 +137,6 @@ export default function ExpensesClient() {
 		}
 		if (!dateInput) {
 			setFormError("日付を入力してください。");
-			return;
-		}
-		if (!dateInput.startsWith(currentMonth)) {
-			setFormError("今月の日付のみ登録できます。");
 			return;
 		}
 
@@ -324,6 +331,105 @@ export default function ExpensesClient() {
 									className="group relative rounded-xl border border-white/5 bg-[#0a0f24]/30 hover:bg-[#0a0f24]/50 transition-all duration-300 p-5 shadow-lg overflow-hidden flex flex-col justify-between"
 								>
 									{/* 各カードのカテゴリ用グラデーションエフェクト */}
+									<div
+										className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${colorClass}`}
+									/>
+
+									<div>
+										<div className="flex items-center justify-between mb-3">
+											<span
+												className={`inline-flex text-[10px] font-bold px-2 py-0.5 rounded bg-gradient-to-r ${colorClass} text-white shadow-sm`}
+											>
+												{category?.name || "未分類"}
+											</span>
+											<span className="text-xs text-slate-500 font-medium">
+												{expense.date}
+											</span>
+										</div>
+
+										{expense.memo && (
+											<p className="text-sm text-slate-300 font-medium line-clamp-2 mb-3">
+												{expense.memo}
+											</p>
+										)}
+									</div>
+
+									<div className="flex items-center justify-between mt-2 pt-3 border-t border-white/5">
+										<div className="text-lg font-black text-white">
+											¥{expense.amount.toLocaleString()}
+										</div>
+										<button
+											onClick={() => handleDelete(expense.id)}
+											className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+											aria-label="削除"
+										>
+											<svg
+												className="w-4.5 h-4.5"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+												aria-hidden="true"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth="2"
+													d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+												/>
+											</svg>
+										</button>
+									</div>
+								</div>
+							);
+						})}
+					</div>
+				)}
+			</div>
+
+			{/* 来月以降の予想出費一覧 */}
+			<div className="w-full space-y-4 pt-4">
+				<h2 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+					<span>来月以降の予想出費一覧</span>
+					<span className="text-xs font-medium px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/10">
+						予定
+					</span>
+				</h2>
+
+				{upcomingExpenses.length === 0 ? (
+					<div className="rounded-2xl border border-dashed border-white/5 bg-white/[0.01] p-12 text-center text-slate-500">
+						<svg
+							className="w-12 h-12 mx-auto text-slate-600 mb-4"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							aria-hidden="true"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="1.5"
+								d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+							/>
+						</svg>
+						<p className="text-sm font-semibold">
+							来月以降に予定されている出費はありません。
+						</p>
+						<p className="text-xs text-slate-600 mt-2">
+							未来の日付を指定して出費を追加すると、ここに表示されます。
+						</p>
+					</div>
+				) : (
+					<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+						{upcomingExpenses.map((expense) => {
+							const category = budgets.find((b) => b.id === expense.budgetId);
+							const fallbackColor = "from-slate-500 to-slate-400";
+							const colorClass = category?.color || fallbackColor;
+
+							return (
+								<div
+									key={expense.id}
+									className="group relative rounded-xl border border-white/5 bg-[#0a0f24]/30 hover:bg-[#0a0f24]/50 transition-all duration-300 p-5 shadow-lg overflow-hidden flex flex-col justify-between"
+								>
 									<div
 										className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${colorClass}`}
 									/>
