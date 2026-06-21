@@ -5,7 +5,7 @@ import { CategoryList } from "@/components/budgets/category-list";
 import { BudgetForm } from "@/components/budgets/budget-form";
 import { BudgetsSkeleton } from "@/components/budgets/page-skeleton";
 import type { BudgetSetting } from "@/components/budgets/types";
-import { getBudgets } from "@/lib/supabase/budgets";
+import { getBudgets, addBudget, updateBudget, deleteBudget } from "@/lib/supabase/budgets";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 export default function BudgetsClient() {
@@ -41,34 +41,39 @@ export default function BudgetsClient() {
 	}, [user, isUserLoading]);
 
 	// 予算の保存（追加または更新）
-	const handleSave = (
+	const handleSave = async (
 		name: string,
 		budget: number,
 		color: string,
 		memo: string,
 	) => {
-		if (editingSetting) {
-			// 編集モード
-			setSettings(
-				settings.map((item) =>
-					item.id === editingSetting.id
-						? { ...item, name, budget, color, memo }
-						: item,
-				),
-			);
-			setEditingSetting(null);
-		} else {
-			// 新規追加
-			const newId = Date.now().toString();
-
-			const newSetting: BudgetSetting = {
-				id: newId,
-				name,
-				budget,
-				color,
-				memo,
-			};
-			setSettings([...settings, newSetting]);
+		if (!user) return;
+		try {
+			if (editingSetting) {
+				// 編集モード
+				const updated = await updateBudget(editingSetting.id, {
+					name,
+					budget,
+					color,
+					memo,
+				});
+				setSettings(
+					settings.map((item) => (item.id === editingSetting.id ? updated : item)),
+				);
+				setEditingSetting(null);
+			} else {
+				// 新規追加
+				const added = await addBudget(user.id, {
+					name,
+					budget,
+					color,
+					memo,
+				});
+				setSettings([...settings, added]);
+			}
+		} catch (error) {
+			console.error("Failed to save budget:", error);
+			alert("予算の保存に失敗しました。");
 		}
 	};
 
@@ -78,11 +83,18 @@ export default function BudgetsClient() {
 	};
 
 	// カテゴリ設定の削除
-	const handleDelete = (id: string) => {
-		setSettings(settings.filter((item) => item.id !== id));
-		// 編集中のカテゴリが削除された場合は編集フォームをリセット
-		if (editingSetting?.id === id) {
-			setEditingSetting(null);
+	const handleDelete = async (id: string) => {
+		if (!confirm("このカテゴリを削除しますか？")) return;
+		
+		const result = await deleteBudget(id);
+		if (result.success) {
+			setSettings(settings.filter((item) => item.id !== id));
+			// 編集中のカテゴリが削除された場合は編集フォームをリセット
+			if (editingSetting?.id === id) {
+				setEditingSetting(null);
+			}
+		} else {
+			alert(result.error || "カテゴリの削除に失敗しました。");
 		}
 	};
 
