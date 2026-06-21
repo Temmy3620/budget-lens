@@ -5,7 +5,7 @@ import { CategoryList } from "@/components/budgets/category-list";
 import { BudgetForm } from "@/components/budgets/budget-form";
 import { BudgetsSkeleton } from "@/components/budgets/page-skeleton";
 import type { BudgetSetting } from "@/components/budgets/types";
-import { getBudgets } from "@/lib/budgets";
+import { getBudgets } from "@/lib/supabase/budgets";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 export default function BudgetsClient() {

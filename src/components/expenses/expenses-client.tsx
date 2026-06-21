@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { BudgetSetting } from "@/components/budgets/types";
-import { getBudgets } from "@/lib/budgets";
+import { getBudgets } from "@/lib/supabase/budgets";
 import { type Expense, deleteExpense, getExpenses } from "@/lib/expenses";
 import { ExpenseFormModal } from "./expense-form-modal";
 import { ExpenseList } from "./expense-list";
