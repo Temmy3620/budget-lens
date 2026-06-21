@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { BudgetSetting } from "@/components/budgets/types";
 import { getBudgets } from "@/lib/supabase/budgets";
-import { type Expense, deleteExpense, getExpenses } from "@/lib/expenses";
+import { type Expense, deleteExpense, getExpenses } from "@/lib/supabase/expenses";
 import { ExpenseFormModal } from "./expense-form-modal";
 import { ExpenseList } from "./expense-list";
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -36,7 +36,7 @@ export default function ExpensesClient() {
 			try {
 				const [budgetsData, expensesData] = await Promise.all([
 					getBudgets(user.id),
-					getExpenses(),
+					getExpenses(user.id),
 				]);
 				setBudgets(budgetsData);
 				setExpenses(expensesData);
@@ -333,6 +333,7 @@ export default function ExpensesClient() {
 					budgets={budgets}
 					onSuccess={handleSaveSuccess}
 					expenseToEdit={expenseToEdit || undefined}
+					userId={user?.id || ""}
 				/>
 			)}
 		</main>

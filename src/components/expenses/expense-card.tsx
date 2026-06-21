@@ -1,5 +1,5 @@
 import type { BudgetSetting } from "@/components/budgets/types";
-import type { Expense } from "@/lib/expenses";
+import type { Expense } from "@/lib/supabase/expenses";
 
 interface ExpenseCardProps {
 	expense: Expense;

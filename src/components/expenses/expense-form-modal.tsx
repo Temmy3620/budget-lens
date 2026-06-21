@@ -1,5 +1,5 @@
 import type { BudgetSetting } from "@/components/budgets/types";
-import { type Expense, addExpense, updateExpense } from "@/lib/expenses";
+import { type Expense, addExpense, updateExpense } from "@/lib/supabase/expenses";
 import { useEffect, useState } from "react";
 
 interface ExpenseFormModalProps {
@@ -7,6 +7,7 @@ interface ExpenseFormModalProps {
 	budgets: BudgetSetting[];
 	onSuccess: (saved: Expense) => void;
 	expenseToEdit?: Expense;
+	userId: string;
 }
 
 export function ExpenseFormModal({
@@ -14,6 +15,7 @@ export function ExpenseFormModal({
 	budgets,
 	onSuccess,
 	expenseToEdit,
+	userId,
 }: ExpenseFormModalProps) {
 	const [selectedBudgetId, setSelectedBudgetId] = useState(
 		expenseToEdit?.budgetId || budgets[0]?.id || "",
@@ -70,7 +72,7 @@ export function ExpenseFormModal({
 					memo: memo.trim(),
 				});
 			} else {
-				saved = await addExpense({
+				saved = await addExpense(userId, {
 					budgetId: selectedBudgetId,
 					amount: Math.floor(Number(amount)),
 					date: dateInput,
