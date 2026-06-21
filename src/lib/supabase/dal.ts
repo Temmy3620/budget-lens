@@ -1,6 +1,6 @@
 import "server-only";
 import { cache } from "react";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "./server";
 import { redirect } from "next/navigation";
 
 /**

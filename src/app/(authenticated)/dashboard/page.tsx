@@ -1,5 +1,5 @@
 import DashboardClient from "@/components/dashboard/dashboard-client";
-import { getCurrentUser } from "@/lib/dal";
+import { getCurrentUser } from "@/lib/supabase/dal";
 
 export const metadata = {
 	title: "ダッシュボード - Budget Lens",

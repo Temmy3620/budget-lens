@@ -1,4 +1,4 @@
-import { verifySession } from "@/lib/dal";
+import { verifySession } from "@/lib/supabase/dal";
 import NavigationShell from "@/components/navigation-shell";
 
 export default async function AuthenticatedLayout({
