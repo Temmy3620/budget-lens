@@ -6,8 +6,10 @@ import { BudgetForm } from "@/components/budgets/budget-form";
 import { BudgetsSkeleton } from "@/components/budgets/page-skeleton";
 import type { BudgetSetting } from "@/components/budgets/types";
 import { getBudgets } from "@/lib/budgets";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 export default function BudgetsClient() {
+	const { user, isLoading: isUserLoading } = useCurrentUser();
 	// 初期の設定済みカテゴリと予算のリスト (ステートで管理)
 	const [settings, setSettings] = useState<BudgetSetting[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -19,8 +21,9 @@ export default function BudgetsClient() {
 
 	useEffect(() => {
 		async function loadBudgets() {
+			if (!user) return;
 			try {
-				const data = await getBudgets();
+				const data = await getBudgets(user.id);
 				setSettings(data);
 			} catch (error) {
 				console.error("Failed to load budgets:", error);
@@ -28,8 +31,14 @@ export default function BudgetsClient() {
 				setIsLoading(false);
 			}
 		}
-		loadBudgets();
-	}, []);
+		if (!isUserLoading) {
+			if (user) {
+				loadBudgets();
+			} else {
+				setIsLoading(false);
+			}
+		}
+	}, [user, isUserLoading]);
 
 	// 予算の保存（追加または更新）
 	const handleSave = (

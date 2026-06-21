@@ -6,8 +6,10 @@ import { getBudgets } from "@/lib/budgets";
 import { type Expense, deleteExpense, getExpenses } from "@/lib/expenses";
 import { ExpenseFormModal } from "./expense-form-modal";
 import { ExpenseList } from "./expense-list";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 export default function ExpensesClient() {
+	const { user, isLoading: isUserLoading } = useCurrentUser();
 	const [expenses, setExpenses] = useState<Expense[]>([]);
 	const [budgets, setBudgets] = useState<BudgetSetting[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -26,13 +28,14 @@ export default function ExpensesClient() {
 
 	useEffect(() => {
 		async function loadData() {
+			if (!user) return;
 			const now = new Date();
 			const yyyy = now.getFullYear();
 			const mm = String(now.getMonth() + 1).padStart(2, "0");
 
 			try {
 				const [budgetsData, expensesData] = await Promise.all([
-					getBudgets(),
+					getBudgets(user.id),
 					getExpenses(),
 				]);
 				setBudgets(budgetsData);
@@ -47,8 +50,14 @@ export default function ExpensesClient() {
 				setIsLoading(false);
 			}
 		}
-		loadData();
-	}, []);
+		if (!isUserLoading) {
+			if (user) {
+				loadData();
+			} else {
+				setIsLoading(false);
+			}
+		}
+	}, [user, isUserLoading]);
 
 	if (isLoading) {
 		return (
@@ -150,6 +159,7 @@ export default function ExpensesClient() {
 				<div className="flex items-center gap-3 self-start sm:self-auto">
 					{/* 出費追加ボタン */}
 					<button
+						type="button"
 						onClick={() => {
 							setExpenseToEdit(null);
 							setIsModalOpen(true);
