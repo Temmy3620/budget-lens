@@ -32,13 +32,18 @@ export default function BudgetsClient() {
 	}, []);
 
 	// 予算の保存（追加または更新）
-	const handleSave = (name: string, budget: number, color: string) => {
+	const handleSave = (
+		name: string,
+		budget: number,
+		color: string,
+		memo: string,
+	) => {
 		if (editingSetting) {
 			// 編集モード
 			setSettings(
 				settings.map((item) =>
 					item.id === editingSetting.id
-						? { ...item, name, budget, color }
+						? { ...item, name, budget, color, memo }
 						: item,
 				),
 			);
@@ -52,6 +57,7 @@ export default function BudgetsClient() {
 				name,
 				budget,
 				color,
+				memo,
 			};
 			setSettings([...settings, newSetting]);
 		}

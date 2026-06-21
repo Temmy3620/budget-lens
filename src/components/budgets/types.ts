@@ -3,6 +3,7 @@ export interface BudgetSetting {
 	name: string;
 	budget: number;
 	color: string;
+	memo?: string;
 }
 
 export interface ColorVariant {

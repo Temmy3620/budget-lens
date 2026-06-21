@@ -30,11 +30,16 @@ export function CategoryList({
 				>
 					<div className="flex items-center gap-4">
 						<span
-							className={`w-3 h-3 rounded-full bg-gradient-to-r ${item.color}`}
+							className={`w-3 h-3 rounded-full bg-gradient-to-r ${item.color} shrink-0`}
 						/>
 						<div>
 							<span className="font-semibold text-slate-200">{item.name}</span>
-							<div className="text-xs text-slate-500 mt-0.5">月間予算上限</div>
+							{item.memo && (
+								<p className="text-xs text-slate-400 mt-1 font-normal leading-relaxed">
+									{item.memo}
+								</p>
+							)}
+							<div className="text-xs text-slate-500 mt-1">月間予算上限</div>
 						</div>
 					</div>
 

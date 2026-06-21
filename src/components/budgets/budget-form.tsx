@@ -6,7 +6,7 @@ import type { BudgetSetting } from "./types";
 
 interface BudgetFormProps {
 	editingSetting: BudgetSetting | null;
-	onSave: (name: string, budget: number, color: string) => void;
+	onSave: (name: string, budget: number, color: string, memo: string) => void;
 	onCancel: () => void;
 }
 
@@ -22,18 +22,20 @@ export function BudgetForm({
 	const [color, setColor] = useState(
 		editingSetting?.color || COLOR_VARIANTS[0].value,
 	);
+	const [memo, setMemo] = useState(editingSetting?.memo || "");
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		const amount = Number.parseInt(budgetAmount, 10);
 		if (Number.isNaN(amount) || amount <= 0 || !categoryName.trim()) return;
 
-		onSave(categoryName.trim(), amount, color);
+		onSave(categoryName.trim(), amount, color, memo.trim());
 		// 新規追加の場合はフォームをリセットする
 		if (!editingSetting) {
 			setCategoryName("");
 			setBudgetAmount("");
 			setColor(COLOR_VARIANTS[0].value);
+			setMemo("");
 		}
 	};
 
@@ -95,6 +97,19 @@ export function BudgetForm({
 							))}
 						</select>
 					</div>
+				</div>
+
+				{/* メモ入力 */}
+				<div className="space-y-2">
+					<span className="text-xs font-semibold text-slate-400">
+						メモ（含まれる支出の例など）
+					</span>
+					<textarea
+						placeholder="例: スーパー、外食、カフェ代など"
+						value={memo}
+						onChange={(e) => setMemo(e.target.value)}
+						className="w-full rounded-xl bg-slate-900 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-violet-500 transition-colors placeholder:text-slate-600 h-20 resize-none"
+					/>
 				</div>
 
 				{/* アクションボタン */}
