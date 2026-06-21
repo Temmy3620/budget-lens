@@ -3,8 +3,6 @@
 -- =========================================================================
 
 -- Drop existing resources if they exist to ensure clean setup
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-DROP FUNCTION IF EXISTS public.handle_new_user();
 DROP TABLE IF EXISTS public.expenses;
 DROP TABLE IF EXISTS public.budgets;
 DROP TABLE IF EXISTS public.users;
@@ -55,27 +53,7 @@ CREATE INDEX idx_expenses_budget_id ON public.expenses(budget_id);
 CREATE INDEX idx_expenses_date ON public.expenses(date);
 
 -- =========================================================================
--- 4. AUTH TRIGGER SYNCHRONIZATION
--- =========================================================================
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS trigger AS $$
-BEGIN
-  INSERT INTO public.users (id, email, name)
-  VALUES (
-    new.id, 
-    new.email, 
-    COALESCE(new.raw_user_meta_data->>'name', '新規ユーザー')
-  );
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-
--- =========================================================================
--- 5. ROW LEVEL SECURITY (RLS) POLICIES
+-- 4. ROW LEVEL SECURITY (RLS) POLICIES
 -- =========================================================================
 
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;

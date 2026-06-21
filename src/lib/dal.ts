@@ -36,6 +36,25 @@ export const getCurrentUser = cache(async () => {
 		return null;
 	}
 
+	// Just In Time (JIT) 同期: public.users にプロフィールレコードがない場合は作成します
+	try {
+		const { data: profile } = await supabase
+			.from("users")
+			.select("id")
+			.eq("id", user.id)
+			.maybeSingle();
+
+		if (!profile) {
+			await supabase.from("users").insert({
+				id: user.id,
+				email: user.email ?? "",
+				name: user.user_metadata?.name ?? "新規ユーザー",
+			});
+		}
+	} catch (err) {
+		console.error("Failed to synchronize user profile in JIT logic:", err);
+	}
+
 	// DTO パターン: パスワードやメタデータなどの不要な情報を除外し、安全なデータのみを返す
 	return {
 		id: user.id,
