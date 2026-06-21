@@ -40,8 +40,15 @@ export async function updateSession(request: NextRequest) {
 		request.nextUrl.pathname.startsWith("/api/auth") ||
 		request.nextUrl.pathname.startsWith("/auth");
 
-	// 未ログイン時にログイン画面や認証関連以外のページにアクセスした場合、ログインに転送
+	// 未ログイン時にログイン画面や認証関連以外のページにアクセスした場合
 	if (!user && !isLoginPage && !isAuthApi) {
+		// APIリクエストの場合はリダイレクトせず、401エラーのJSONを返す
+		if (request.nextUrl.pathname.startsWith("/api")) {
+			return NextResponse.json(
+				{ error: "認証されていません" },
+				{ status: 401 },
+			);
+		}
 		const url = request.nextUrl.clone();
 		url.pathname = "/login";
 		return NextResponse.redirect(url);
