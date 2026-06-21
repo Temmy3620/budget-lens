@@ -1,15 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { logout } from "@/app/login/actions";
 
 interface HeaderProps {
 	isOpen: boolean;
 	setIsOpen: (isOpen: boolean) => void;
 	userEmail?: string;
+	userName?: string;
 }
 
-export default function Header({ isOpen, setIsOpen, userEmail }: HeaderProps) {
+export default function Header({
+	isOpen,
+	setIsOpen,
+	userEmail,
+	userName,
+}: HeaderProps) {
 	return (
 		<header className="flex h-16 items-center justify-between border-b border-white/5 px-6 bg-[#0a0f24]/50 backdrop-blur-md sticky top-0 z-40">
 			<div className="flex items-center gap-4">
@@ -59,17 +64,9 @@ export default function Header({ isOpen, setIsOpen, userEmail }: HeaderProps) {
 			</div>
 
 			<div className="flex items-center gap-4">
-				<span className="text-sm text-slate-400 hidden sm:inline text-right truncate max-w-[180px]">
-					{userEmail}
+				<span className="text-sm font-semibold bg-gradient-to-r from-[#ffe8bd] to-[#ffd280] bg-clip-text text-transparent truncate max-w-[180px]">
+					{userName || userEmail}
 				</span>
-				<form action={logout}>
-					<button
-						type="submit"
-						className="rounded-lg bg-slate-900 border border-white/5 px-3 py-1.5 text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer"
-					>
-						ログアウト
-					</button>
-				</form>
 			</div>
 		</header>
 	);

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getUsers } from "@/lib/users";
+import { getUsers } from "@/lib/supabase/users";
 
 // GET /api/user - ユーザー一覧の取得
 export async function GET() {

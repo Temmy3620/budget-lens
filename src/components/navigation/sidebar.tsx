@@ -3,17 +3,20 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { navItems } from "@/config/navigation";
+import { logout } from "@/app/login/actions";
 
 interface SidebarProps {
 	isOpen: boolean;
 	setIsOpen: (isOpen: boolean) => void;
 	userEmail?: string;
+	userName?: string;
 }
 
 export default function Sidebar({
 	isOpen,
 	setIsOpen,
 	userEmail,
+	userName,
 }: SidebarProps) {
 	const pathname = usePathname();
 
@@ -89,15 +92,28 @@ export default function Sidebar({
 				</nav>
 
 				{/* 下部ユーザープロフィール */}
-				<div className="pt-6 border-t border-white/5">
+				<div className="pt-6 border-t border-white/5 flex flex-col gap-4">
 					<div className="flex flex-col gap-1">
 						<span className="text-xs text-slate-500 font-semibold tracking-wider uppercase">
 							ログイン中
 						</span>
-						<span className="text-sm text-slate-300 font-medium truncate">
+						{userName && (
+							<span className="text-sm font-semibold bg-gradient-to-r from-[#ffe8bd] to-[#ffd280] bg-clip-text text-transparent truncate">
+								{userName}
+							</span>
+						)}
+						<span className="text-xs text-slate-400 font-medium truncate">
 							{userEmail}
 						</span>
 					</div>
+					<form action={logout}>
+						<button
+							type="submit"
+							className="w-full rounded-lg bg-slate-900 border border-white/5 px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer text-center"
+						>
+							ログアウト
+						</button>
+					</form>
 				</div>
 			</aside>
 		</div>
