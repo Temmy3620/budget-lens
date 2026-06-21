@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { BudgetSetting } from "@/components/budgets/types";
 import { getBudgets } from "@/lib/budgets";
 import { type Expense, deleteExpense, getExpenses } from "@/lib/expenses";
-import { ExpenseAddModal } from "./expense-add-modal";
+import { ExpenseFormModal } from "./expense-form-modal";
 import { ExpenseList } from "./expense-list";
 
 export default function ExpensesClient() {
@@ -20,6 +20,9 @@ export default function ExpensesClient() {
 
 	// モーダルの表示状態
 	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	// 編集中の出費データ
+	const [expenseToEdit, setExpenseToEdit] = useState<Expense | null>(null);
 
 	useEffect(() => {
 		async function loadData() {
@@ -99,6 +102,32 @@ export default function ExpensesClient() {
 		}
 	};
 
+	// 出費の編集開始
+	const handleEdit = (expense: Expense) => {
+		setExpenseToEdit(expense);
+		setIsModalOpen(true);
+	};
+
+	// 新規登録または編集完了時の処理
+	const handleSaveSuccess = (savedExpense: Expense) => {
+		const isEdit = expenses.some((item) => item.id === savedExpense.id);
+		if (isEdit) {
+			setExpenses(
+				expenses.map((item) =>
+					item.id === savedExpense.id ? savedExpense : item,
+				),
+			);
+		} else {
+			setExpenses([savedExpense, ...expenses]);
+		}
+	};
+
+	// モーダルを閉じる
+	const handleCloseModal = () => {
+		setIsModalOpen(false);
+		setExpenseToEdit(null);
+	};
+
 	// 年月の見やすい日本語表記
 	const getDisplayMonth = () => {
 		const [year, month] = currentMonth.split("-");
@@ -121,7 +150,10 @@ export default function ExpensesClient() {
 				<div className="flex items-center gap-3 self-start sm:self-auto">
 					{/* 出費追加ボタン */}
 					<button
-						onClick={() => setIsModalOpen(true)}
+						onClick={() => {
+							setExpenseToEdit(null);
+							setIsModalOpen(true);
+						}}
 						className="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold text-sm px-4 py-2.5 rounded-2xl shadow-lg hover:shadow-violet-600/20 active:scale-[0.98] transition-all cursor-pointer"
 					>
 						<svg
@@ -227,6 +259,7 @@ export default function ExpensesClient() {
 					expenses={filteredExpenses}
 					budgets={budgets}
 					onDelete={handleDelete}
+					onEdit={handleEdit}
 					emptyIcon={
 						<svg
 							className="w-12 h-12"
@@ -261,6 +294,7 @@ export default function ExpensesClient() {
 					expenses={upcomingExpenses}
 					budgets={budgets}
 					onDelete={handleDelete}
+					onEdit={handleEdit}
 					emptyIcon={
 						<svg
 							className="w-12 h-12"
@@ -284,10 +318,11 @@ export default function ExpensesClient() {
 
 			{/* 出費追加モーダル */}
 			{isModalOpen && (
-				<ExpenseAddModal
-					onClose={() => setIsModalOpen(false)}
+				<ExpenseFormModal
+					onClose={handleCloseModal}
 					budgets={budgets}
-					onSuccess={(added) => setExpenses([added, ...expenses])}
+					onSuccess={handleSaveSuccess}
+					expenseToEdit={expenseToEdit || undefined}
 				/>
 			)}
 		</main>

@@ -1,30 +1,35 @@
 import type { BudgetSetting } from "@/components/budgets/types";
-import { type Expense, addExpense } from "@/lib/expenses";
+import { type Expense, addExpense, updateExpense } from "@/lib/expenses";
 import { useEffect, useState } from "react";
 
-interface ExpenseAddModalProps {
+interface ExpenseFormModalProps {
 	onClose: () => void;
 	budgets: BudgetSetting[];
-	onSuccess: (added: Expense) => void;
+	onSuccess: (saved: Expense) => void;
+	expenseToEdit?: Expense;
 }
 
-export function ExpenseAddModal({
+export function ExpenseFormModal({
 	onClose,
 	budgets,
 	onSuccess,
-}: ExpenseAddModalProps) {
+	expenseToEdit,
+}: ExpenseFormModalProps) {
 	const [selectedBudgetId, setSelectedBudgetId] = useState(
-		budgets[0]?.id || "",
+		expenseToEdit?.budgetId || budgets[0]?.id || "",
 	);
-	const [amount, setAmount] = useState<number | "">("");
+	const [amount, setAmount] = useState<number | "">(
+		expenseToEdit?.amount ?? "",
+	);
 	const [dateInput, setDateInput] = useState(() => {
+		if (expenseToEdit?.date) return expenseToEdit.date;
 		const now = new Date();
 		const yyyy = now.getFullYear();
 		const mm = String(now.getMonth() + 1).padStart(2, "0");
 		const dd = String(now.getDate()).padStart(2, "0");
 		return `${yyyy}-${mm}-${dd}`;
 	});
-	const [memo, setMemo] = useState("");
+	const [memo, setMemo] = useState(expenseToEdit?.memo || "");
 	const [formError, setFormError] = useState("");
 
 	// ESCキー押下でモーダルを閉じる
@@ -38,7 +43,7 @@ export function ExpenseAddModal({
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, [onClose]);
 
-	const handleAdd = async (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setFormError("");
 
@@ -56,20 +61,32 @@ export function ExpenseAddModal({
 		}
 
 		try {
-			const added = await addExpense({
-				budgetId: selectedBudgetId,
-				amount: Math.floor(Number(amount)),
-				date: dateInput,
-				memo: memo.trim(),
-			});
+			let saved: Expense;
+			if (expenseToEdit) {
+				saved = await updateExpense(expenseToEdit.id, {
+					budgetId: selectedBudgetId,
+					amount: Math.floor(Number(amount)),
+					date: dateInput,
+					memo: memo.trim(),
+				});
+			} else {
+				saved = await addExpense({
+					budgetId: selectedBudgetId,
+					amount: Math.floor(Number(amount)),
+					date: dateInput,
+					memo: memo.trim(),
+				});
+			}
 
-			onSuccess(added);
+			onSuccess(saved);
 			onClose();
 		} catch (error) {
-			console.error("Failed to add expense:", error);
-			setFormError("出費の追加に失敗しました。");
+			console.error("Failed to save expense:", error);
+			setFormError("保存に失敗しました。");
 		}
 	};
+
+	const isEditMode = !!expenseToEdit;
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
@@ -105,10 +122,10 @@ export function ExpenseAddModal({
 				</button>
 
 				<h3 className="text-xl font-bold text-white mb-6 bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-					出費の追加
+					{isEditMode ? "出費の編集" : "出費の追加"}
 				</h3>
 
-				<form onSubmit={handleAdd} className="space-y-4">
+				<form onSubmit={handleSubmit} className="space-y-4">
 					{/* エラー表示 */}
 					{formError && (
 						<div className="p-3 text-xs bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl">
@@ -218,7 +235,7 @@ export function ExpenseAddModal({
 							disabled={budgets.length === 0}
 							className="flex-1 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:from-slate-800 disabled:to-slate-900 disabled:text-slate-600 text-white font-semibold text-sm py-3 px-4 rounded-xl shadow-lg hover:shadow-violet-600/20 active:scale-[0.98] transition-all cursor-pointer"
 						>
-							登録する
+							{isEditMode ? "更新する" : "登録する"}
 						</button>
 					</div>
 				</form>

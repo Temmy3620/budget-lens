@@ -7,6 +7,7 @@ interface ExpenseListProps {
 	expenses: Expense[];
 	budgets: BudgetSetting[];
 	onDelete: (id: string) => void;
+	onEdit: (expense: Expense) => void;
 	emptyIcon: ReactNode;
 	emptyTitle: string;
 	emptySubtitle: string;
@@ -16,6 +17,7 @@ export function ExpenseList({
 	expenses,
 	budgets,
 	onDelete,
+	onEdit,
 	emptyIcon,
 	emptyTitle,
 	emptySubtitle,
@@ -40,6 +42,7 @@ export function ExpenseList({
 					expense={expense}
 					budgets={budgets}
 					onDelete={onDelete}
+					onEdit={onEdit}
 				/>
 			))}
 		</div>

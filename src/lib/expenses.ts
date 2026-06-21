@@ -108,3 +108,24 @@ export async function deleteExpense(id: string): Promise<void> {
 	const filtered = expenses.filter((item) => item.id !== id);
 	await saveExpenses(filtered);
 }
+
+/**
+ * 指定したIDの出費を更新します
+ */
+export async function updateExpense(
+	id: string,
+	updatedData: Omit<Expense, "id" | "createdAt">,
+): Promise<Expense> {
+	const expenses = await getExpenses();
+	const index = expenses.findIndex((item) => item.id === id);
+	if (index === -1) {
+		throw new Error("更新対象の出費データが見つかりません。");
+	}
+	const updatedExpense: Expense = {
+		...expenses[index],
+		...updatedData,
+	};
+	expenses[index] = updatedExpense;
+	await saveExpenses(expenses);
+	return updatedExpense;
+}
