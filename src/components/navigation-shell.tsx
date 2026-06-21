@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Header from "./navigation/header";
 import Sidebar from "./navigation/sidebar";
-import { fetchCurrentUser } from "@/lib/users-client";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 interface NavigationShellProps {
 	children: React.ReactNode;
@@ -15,17 +15,8 @@ export default function NavigationShell({
 	userEmail,
 }: NavigationShellProps) {
 	const [isOpen, setIsOpen] = useState(false);
-	const [userName, setUserName] = useState<string>("");
-
-	useEffect(() => {
-		async function loadUser() {
-			const user = await fetchCurrentUser();
-			if (user?.name) {
-				setUserName(user.name);
-			}
-		}
-		loadUser();
-	}, []);
+	const { user } = useCurrentUser();
+	const userName = user?.name ?? "";
 
 	return (
 		<div className="min-h-screen bg-[#030616] text-white flex flex-col">
