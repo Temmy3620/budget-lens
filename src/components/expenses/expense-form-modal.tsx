@@ -1,6 +1,7 @@
 import type { BudgetSetting } from "@/components/budgets/types";
 import { type Expense, addExpense, updateExpense } from "@/lib/supabase/expenses";
 import { useEffect, useState } from "react";
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface ExpenseFormModalProps {
 	onClose: () => void;
@@ -197,13 +198,7 @@ export function ExpenseFormModal({
 						>
 							日付
 						</label>
-						<input
-							id="modal-date"
-							type="date"
-							value={dateInput}
-							onChange={(e) => setDateInput(e.target.value)}
-							className="w-full bg-[#030616]/80 border border-white/10 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-violet-500 transition-colors shadow-inner"
-						/>
+						<DatePicker value={dateInput} onChange={setDateInput} />
 					</div>
 
 					{/* メモ */}
