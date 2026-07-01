@@ -140,14 +140,12 @@ export function DashboardStats({
 				</div>
 			</div>
 
-			{/* カード3: 今月の収入 */}
-			<div className="group relative rounded-2xl border border-white/5 bg-[#0a0f24]/40 p-6 backdrop-blur-md hover:border-emerald-500/20 transition-all duration-300 shadow-xl overflow-hidden">
-				<div className="absolute top-0 right-0 w-24 h-24 rounded-full bg-emerald-500/5 blur-2xl group-hover:bg-emerald-500/10 transition-all duration-300" />
+			{/* カード3: 今月の予算 */}
+			<div className="group relative rounded-2xl border border-white/5 bg-[#0a0f24]/40 p-6 backdrop-blur-md hover:border-blue-500/20 transition-all duration-300 shadow-xl overflow-hidden">
+				<div className="absolute top-0 right-0 w-24 h-24 rounded-full bg-blue-500/5 blur-2xl group-hover:bg-blue-500/10 transition-all duration-300" />
 				<div className="flex items-center justify-between mb-4">
-					<span className="text-sm font-medium text-slate-400">
-						今月の手取り収入
-					</span>
-					<div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
+					<span className="text-sm font-medium text-slate-400">今月の予算</span>
+					<div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
 						<svg
 							className="w-5 h-5"
 							fill="none"
@@ -155,27 +153,29 @@ export function DashboardStats({
 							viewBox="0 0 24 24"
 							aria-hidden="true"
 							role="img"
-							aria-label="手取り収入アイコン"
+							aria-label="予算アイコン"
 						>
 							<path
 								strokeLinecap="round"
 								strokeLinejoin="round"
 								strokeWidth="2"
-								d="M12 4v16m8-8H4"
+								d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"
 							/>
 						</svg>
 					</div>
 				</div>
 				<div className="text-3xl font-extrabold text-white tracking-tight">
-					¥350,000
+					¥{totalBudget.toLocaleString()}
 				</div>
 				<div className="mt-2 flex items-center gap-2 text-xs">
-					<span className="text-slate-400 font-semibold">固定給: ¥320,000</span>
-					<span className="text-slate-500">/ 副収入: ¥30,000</span>
+					<span className="text-slate-400 font-semibold">
+						設定カテゴリ数: {budgets.length}件
+					</span>
+					<span className="text-slate-500">の合計</span>
 				</div>
 				<div className="mt-4 w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
 					<div
-						className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
+						className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"
 						style={{ width: "100%" }}
 					/>
 				</div>
