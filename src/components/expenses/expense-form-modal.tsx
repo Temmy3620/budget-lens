@@ -1,5 +1,9 @@
 import type { BudgetSetting } from "@/components/budgets/types";
-import { type Expense, addExpense, updateExpense } from "@/lib/supabase/expenses";
+import {
+	type Expense,
+	addExpense,
+	updateExpense,
+} from "@/lib/supabase/expenses";
 import { useEffect, useState } from "react";
 import { DatePicker } from "@/components/ui/date-picker";
 

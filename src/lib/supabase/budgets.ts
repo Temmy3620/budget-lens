@@ -127,12 +127,21 @@ export async function deleteBudget(
 			.eq("budget_id", id);
 
 		if (countError) {
-			console.warn("Failed to check linked expenses from Supabase:", countError);
-			return { success: false, error: "データベース接続エラーが発生しました。" };
+			console.warn(
+				"Failed to check linked expenses from Supabase:",
+				countError,
+			);
+			return {
+				success: false,
+				error: "データベース接続エラーが発生しました。",
+			};
 		}
 
 		if (count !== null && count > 0) {
-			return { success: false, error: "このカテゴリは現在出費で使用されているため削除できません。" };
+			return {
+				success: false,
+				error: "このカテゴリは現在出費で使用されているため削除できません。",
+			};
 		}
 
 		const { error } = await supabase.from("budgets").delete().eq("id", id);

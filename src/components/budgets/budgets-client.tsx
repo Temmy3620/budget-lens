@@ -5,7 +5,12 @@ import { CategoryList } from "@/components/budgets/category-list";
 import { BudgetForm } from "@/components/budgets/budget-form";
 import { BudgetsSkeleton } from "@/components/budgets/page-skeleton";
 import type { BudgetSetting } from "@/components/budgets/types";
-import { getBudgets, addBudget, updateBudget, deleteBudget } from "@/lib/supabase/budgets";
+import {
+	getBudgets,
+	addBudget,
+	updateBudget,
+	deleteBudget,
+} from "@/lib/supabase/budgets";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 export default function BudgetsClient() {
@@ -58,7 +63,9 @@ export default function BudgetsClient() {
 					memo,
 				});
 				setSettings(
-					settings.map((item) => (item.id === editingSetting.id ? updated : item)),
+					settings.map((item) =>
+						item.id === editingSetting.id ? updated : item,
+					),
 				);
 				setEditingSetting(null);
 			} else {
@@ -85,7 +92,7 @@ export default function BudgetsClient() {
 	// カテゴリ設定の削除
 	const handleDelete = async (id: string) => {
 		if (!confirm("このカテゴリを削除しますか？")) return;
-		
+
 		const result = await deleteBudget(id);
 		if (result.success) {
 			setSettings(settings.filter((item) => item.id !== id));

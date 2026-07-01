@@ -51,10 +51,10 @@ export default function Header({
 
 				<div className="flex items-center gap-2 select-none">
 					<Image
-						src="/icon.png"
+						src="/icon_v3.png"
 						alt="Budget Lens Logo"
-						width={52}
-						height={52}
+						width={100}
+						height={100}
 						className="w-6 h-6 object-contain"
 					/>
 					<span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent tracking-wide">

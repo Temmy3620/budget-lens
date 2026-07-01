@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import type { BudgetSetting } from "@/components/budgets/types";
 import { getBudgets } from "@/lib/supabase/budgets";
-import { type Expense, deleteExpense, getExpenses } from "@/lib/supabase/expenses";
+import {
+	type Expense,
+	deleteExpense,
+	getExpenses,
+} from "@/lib/supabase/expenses";
 import { ExpenseFormModal } from "./expense-form-modal";
 import { ExpenseList } from "./expense-list";
 import { useCurrentUser } from "@/hooks/use-current-user";

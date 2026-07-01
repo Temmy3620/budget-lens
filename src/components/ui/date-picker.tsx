@@ -41,9 +41,14 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
 	const getCalendarDays = () => {
 		const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
 		const totalDays = new Date(calendarYear, calendarMonth + 1, 0).getDate();
-		const prevMonthTotalDays = new Date(calendarYear, calendarMonth, 0).getDate();
+		const prevMonthTotalDays = new Date(
+			calendarYear,
+			calendarMonth,
+			0,
+		).getDate();
 
-		const days: { dateStr: string; dayNum: number; isCurrentMonth: boolean }[] = [];
+		const days: { dateStr: string; dayNum: number; isCurrentMonth: boolean }[] =
+			[];
 
 		// 前月のパディング日
 		for (let i = firstDay - 1; i >= 0; i--) {
@@ -146,8 +151,18 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
 							onClick={handlePrevMonth}
 							className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
 						>
-							<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+							<svg
+								className="w-4 h-4"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2.5"
+									d="M15 19l-7-7 7-7"
+								/>
 							</svg>
 						</button>
 						<span className="text-sm font-bold text-white">
@@ -158,8 +173,18 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
 							onClick={handleNextMonth}
 							className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
 						>
-							<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+							<svg
+								className="w-4 h-4"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2.5"
+									d="M9 5l7 7-7 7"
+								/>
 							</svg>
 						</button>
 					</div>
