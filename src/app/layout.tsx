@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 	title: "Budget Lens",
 	description: "予算の管理と可視化を行う Next.js アプリケーション",
 	icons: {
-		icon: "/icon_v3.png",
+		icon: "/icon_v4.png",
 	},
 };
 

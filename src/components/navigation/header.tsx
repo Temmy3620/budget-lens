@@ -51,7 +51,7 @@ export default function Header({
 
 				<div className="flex items-center gap-2 select-none">
 					<Image
-						src="/icon_v3.png"
+						src="/icon_v4.png"
 						alt="Budget Lens Logo"
 						width={100}
 						height={100}
