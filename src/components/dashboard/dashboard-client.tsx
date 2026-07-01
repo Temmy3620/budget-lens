@@ -121,7 +121,10 @@ export default function DashboardClient({ user }: DashboardClientProps) {
 			{/* 二段目のグリッド */}
 			<div className="grid gap-8 lg:grid-cols-3">
 				{/* 最近の支出履歴 (2カラム幅) */}
-				<RecentExpenses budgets={budgets} expenses={expenses} />
+				<RecentExpenses
+					budgets={budgets}
+					thisMonthExpenses={thisMonthExpenses}
+				/>
 
 				{/* カテゴリ別支出割合 (1カラム幅) */}
 				<CategorySpentChart

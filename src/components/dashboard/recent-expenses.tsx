@@ -5,11 +5,16 @@ import type { Expense } from "@/lib/supabase/expenses";
 
 interface RecentExpensesProps {
 	budgets: BudgetSetting[];
-	expenses: Expense[];
+	thisMonthExpenses: Expense[];
 }
 
-export function RecentExpenses({ budgets, expenses }: RecentExpensesProps) {
-	const recentExpenses = expenses.slice(0, 4);
+export function RecentExpenses({
+	budgets,
+	thisMonthExpenses,
+}: RecentExpensesProps) {
+	const recentExpenses = [...thisMonthExpenses]
+		.sort((a, b) => b.date.localeCompare(a.date))
+		.slice(0, 4);
 
 	const getCategoryInfo = (budgetId: string) => {
 		const category = budgets.find((b) => b.id === budgetId);
