@@ -16,7 +16,7 @@ export default function LoginPage() {
 			<div className="flex-1 relative min-h-[360px] md:min-h-screen bg-[#05081c]/30 border-b md:border-b-0 md:border-r border-white/5">
 				{/* 左半分全面にキービジュアル画像を広げて表示 */}
 				<Image
-					src="/keyvisual.png"
+					src="/keyvisual_v3.png"
 					alt="Budget Lens Key Visual"
 					fill
 					priority
