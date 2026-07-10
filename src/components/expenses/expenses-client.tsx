@@ -73,10 +73,10 @@ export default function ExpensesClient() {
 		);
 	}
 
-	// 表示対象月(YYYY-MM)に合致する出費のみを抽出
-	const filteredExpenses = expenses.filter((expense) =>
-		expense.date.startsWith(currentMonth),
-	);
+	// 表示対象月(YYYY-MM)に合致する出費のみを抽出（作成日時の若い順＝古い順でソート）
+	const filteredExpenses = expenses
+		.filter((expense) => expense.date.startsWith(currentMonth))
+		.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
 	// 来月以降の予想出費（実際の今月より未来のデータ）を抽出
 	const upcomingExpenses = expenses
@@ -239,11 +239,10 @@ export default function ExpensesClient() {
 											</div>
 											<div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden relative">
 												<div
-													className={`h-full rounded-full transition-all duration-500 bg-gradient-to-r ${
-														isOver
-															? "from-rose-500 to-pink-500"
-															: category.color || "from-slate-500 to-slate-400"
-													}`}
+													className={`h-full rounded-full transition-all duration-500 bg-gradient-to-r ${isOver
+														? "from-rose-500 to-pink-500"
+														: category.color || "from-slate-500 to-slate-400"
+														}`}
 													style={{ width: `${percentage}%` }}
 												/>
 											</div>
