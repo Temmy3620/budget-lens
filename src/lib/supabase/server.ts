@@ -23,6 +23,12 @@ export async function createClient() {
 					}
 				},
 			},
+			cookieOptions: {
+				maxAge: 60 * 60 * 24 * 365, // 1年 (31,536,000秒)
+				path: "/",
+				sameSite: "lax",
+				secure: process.env.NODE_ENV === "production",
+			},
 		},
 	);
 }
