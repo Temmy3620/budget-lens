@@ -17,6 +17,12 @@ export const metadata: Metadata = {
 	description: "予算の管理と可視化を行う Next.js アプリケーション",
 	icons: {
 		icon: "/icon_v4.png",
+		apple: "/icon_v4.png",
+	},
+	appleWebApp: {
+		capable: true,
+		statusBarStyle: "black",
+		title: "Budget Lens",
 	},
 };
 
