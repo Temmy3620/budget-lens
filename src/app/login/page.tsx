@@ -13,15 +13,20 @@ export default function LoginPage() {
 			<div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff02_1px,transparent_1px),linear-gradient(to_bottom,#ffffff02_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
 			{/* ================= 左カラム: イラスト＆ロゴエリア ================= */}
-			<div className="flex-1 relative min-h-[360px] md:min-h-screen bg-[#05081c]/30 border-b md:border-b-0 md:border-r border-white/5">
-				{/* 左半分全面にキービジュアル画像を広げて表示 */}
-				<Image
-					src="/keyvisual_v3.png"
-					alt="Budget Lens Key Visual"
-					fill
-					priority
-					className="object-cover"
-				/>
+			<div className="flex-1 relative min-h-[360px] md:min-h-screen bg-[#05081c]/30 border-b md:border-b-0 md:border-r border-white/5 flex items-center justify-center p-8 md:p-12 lg:p-16">
+				{/* キービジュアル画像を中央に少し小さく、額縁のように浮かせて配置 */}
+				<div className="relative w-full max-h-full aspect-[4/3] overflow-hidden">
+					<Image
+						src="/keyvisual_v3.png"
+						alt="Budget Lens Key Visual"
+						fill
+						priority
+						sizes="(max-width: 768px) 100vw, 50vw"
+						className="object-cover"
+					/>
+					{/* 四辺の境界線をふわっと背景に溶け込ませるインセットシャドウ */}
+					<div className="absolute inset-0 shadow-[inset_0_0_40px_16px_#030616] pointer-events-none" />
+				</div>
 			</div>
 
 			{/* ================= 右カラム: ログインフォームエリア ================= */}
