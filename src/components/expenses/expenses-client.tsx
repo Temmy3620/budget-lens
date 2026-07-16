@@ -153,7 +153,7 @@ export default function ExpensesClient() {
 			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-white/5 pb-6 gap-4">
 				<div>
 					<h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
-						出費管理
+						支出管理
 					</h1>
 					<p className="text-slate-400 mt-2 text-sm">
 						日々の出費を記録し、設定した予算カテゴリごとの残り予算をチェックします。

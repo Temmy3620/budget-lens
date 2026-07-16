@@ -48,7 +48,7 @@ export const navItems: NavItem[] = [
 		),
 	},
 	{
-		name: "出費管理",
+		name: "支出管理",
 		href: "/expenses",
 		icon: (
 			<svg
