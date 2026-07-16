@@ -231,7 +231,9 @@ export default function ExpensesClient() {
 													{category.name}
 												</span>
 												<span className="text-slate-400">
-													<span className="font-bold text-slate-200">
+													<span
+														className={`font-bold ${isOver ? "text-rose-500" : "text-slate-200"}`}
+													>
 														¥{spent.toLocaleString()}
 													</span>{" "}
 													/ ¥{category.budget.toLocaleString()}
@@ -239,10 +241,8 @@ export default function ExpensesClient() {
 											</div>
 											<div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden relative">
 												<div
-													className={`h-full rounded-full transition-all duration-500 bg-gradient-to-r ${isOver
-														? "from-rose-500 to-pink-500"
-														: category.color || "from-slate-500 to-slate-400"
-														}`}
+													className={`h-full rounded-full transition-all duration-500 bg-gradient-to-r
+														 ${category.color || "from-slate-500 to-slate-400"}`}
 													style={{ width: `${percentage}%` }}
 												/>
 											</div>
