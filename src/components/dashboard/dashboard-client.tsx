@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { BudgetSetting } from "@/components/budgets/types";
 import { getBudgets } from "@/lib/supabase/budgets";
 import { type Expense, getExpenses } from "@/lib/supabase/expenses";
-import { CategorySpentChart } from "./category-spent-chart";
+import { CategorySpentChart } from "@/components/ui/category-spent-chart";
 import { DashboardStats } from "./dashboard-stats";
 import { RecentExpenses } from "./recent-expenses";
 
