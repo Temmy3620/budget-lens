@@ -139,3 +139,21 @@ export async function updateExpense(
 
 	return mapRowToExpense(data);
 }
+
+/**
+ * 出費一覧からカテゴリごとの支出合計額を集計する
+ * @param expenses 出費レコードの配列
+ * @returns カテゴリIDをキー、支出合計額を値とするオブジェクト
+ */
+export function calculateCategorySpent(
+	expenses: Expense[],
+): Record<string, number> {
+	return expenses.reduce(
+		(acc, curr) => {
+			const bId = curr.budgetId || "unclassified";
+			acc[bId] = (acc[bId] || 0) + curr.amount;
+			return acc;
+		},
+		{} as Record<string, number>,
+	);
+}

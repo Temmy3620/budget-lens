@@ -7,10 +7,12 @@ import {
 	type Expense,
 	deleteExpense,
 	getExpenses,
+	calculateCategorySpent,
 } from "@/lib/supabase/expenses";
 import { ExpenseFormModal } from "./expense-form-modal";
 import { ExpenseList } from "./expense-list";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { CategoryBudgetProgressList } from "@/components/ui/category-budget-progress";
 
 export default function ExpensesClient() {
 	const { user, isLoading: isUserLoading } = useCurrentUser();
@@ -93,13 +95,7 @@ export default function ExpensesClient() {
 	);
 
 	// カテゴリごとの総支出を計算
-	const categorySpentMap = filteredExpenses.reduce(
-		(acc, curr) => {
-			acc[curr.budgetId] = (acc[curr.budgetId] || 0) + curr.amount;
-			return acc;
-		},
-		{} as Record<string, number>,
-	);
+	const categorySpentMap = calculateCategorySpent(filteredExpenses);
 
 	// 設定済み予算の合計
 	const totalBudget = budgets.reduce((sum, item) => sum + item.budget, 0);
@@ -214,47 +210,10 @@ export default function ExpensesClient() {
 						<h3 className="text-sm font-bold text-white mb-2">
 							カテゴリ別の予算消化状況
 						</h3>
-						{budgets.length > 0 ? (
-							<div className="grid gap-4 sm:grid-cols-2">
-								{budgets.map((category) => {
-									const spent = categorySpentMap[category.id] || 0;
-									const percentage =
-										category.budget > 0
-											? Math.min((spent / category.budget) * 100, 100)
-											: 0;
-									const isOver = spent > category.budget;
-
-									return (
-										<div key={category.id} className="space-y-1.5">
-											<div className="flex items-center justify-between text-xs">
-												<span className="font-semibold text-slate-300">
-													{category.name}
-												</span>
-												<span className="text-slate-400">
-													<span
-														className={`font-bold ${isOver ? "text-rose-500" : "text-slate-200"}`}
-													>
-														¥{spent.toLocaleString()}
-													</span>{" "}
-													/ ¥{category.budget.toLocaleString()}
-												</span>
-											</div>
-											<div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden relative">
-												<div
-													className={`h-full rounded-full transition-all duration-500 bg-gradient-to-r
-														 ${category.color || "from-slate-500 to-slate-400"}`}
-													style={{ width: `${percentage}%` }}
-												/>
-											</div>
-										</div>
-									);
-								})}
-							</div>
-						) : (
-							<p className="text-xs text-slate-500">
-								カテゴリが設定されていません。
-							</p>
-						)}
+						<CategoryBudgetProgressList
+							budgets={budgets}
+							categorySpentMap={categorySpentMap}
+						/>
 					</div>
 				</div>
 			</div>
