@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { MonthlyHistorySummary } from "@/components/history/mock-data";
+import type { MonthlyHistorySummary } from "@/components/history/types";
 
 interface HistoryMonthCardProps {
 	selectedYear: number;
@@ -73,8 +73,9 @@ export function HistoryMonthCard({
 							{isOver ? "超過額" : "残額"}
 						</span>
 						<div
-							className={`text-lg font-black ${isOver ? "text-rose-400" : "text-emerald-400"
-								}`}
+							className={`text-lg font-black ${
+								isOver ? "text-rose-400" : "text-emerald-400"
+							}`}
 						>
 							{isOver ? "-" : "+"}¥{Math.abs(diff).toLocaleString()}
 						</div>
@@ -92,10 +93,11 @@ export function HistoryMonthCard({
 						</div>
 						<div className="w-full h-2 bg-slate-900 border border-white/5 rounded-full overflow-hidden">
 							<div
-								className={`h-full rounded-full transition-all duration-500 ${isOver
-									? "bg-gradient-to-r from-rose-500 to-pink-500"
-									: "bg-gradient-to-r from-violet-500 to-indigo-500"
-									}`}
+								className={`h-full rounded-full transition-all duration-500 ${
+									isOver
+										? "bg-gradient-to-r from-rose-500 to-pink-500"
+										: "bg-gradient-to-r from-violet-500 to-indigo-500"
+								}`}
 								style={{ width: `${percentage}%` }}
 							/>
 						</div>

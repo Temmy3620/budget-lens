@@ -60,7 +60,7 @@ export default function ExpensesClient() {
 			if (user) {
 				loadData();
 			} else {
-				setIsLoading(false);
+				setTimeout(() => setIsLoading(false), 0);
 			}
 		}
 	}, [user, isUserLoading]);

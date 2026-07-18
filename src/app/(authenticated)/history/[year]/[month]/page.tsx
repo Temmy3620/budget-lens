@@ -1,5 +1,5 @@
 import HistoryDetailClient from "@/components/history/history-detail/history-detail-client";
-import { getCurrentUser } from "@/lib/supabase/dal";
+import { getHistoryData } from "@/lib/supabase/history";
 
 interface HistoryDetailParams {
 	params: Promise<{
@@ -23,7 +23,13 @@ export default async function HistoryDetailPage({
 	const yearNum = Number.parseInt(year, 10);
 	const monthNum = Number.parseInt(month, 10);
 
-	const user = await getCurrentUser();
+	const historyData = await getHistoryData(yearNum, monthNum);
 
-	return <HistoryDetailClient user={user} year={yearNum} month={monthNum} />;
+	return (
+		<HistoryDetailClient
+			year={yearNum}
+			month={monthNum}
+			initialData={historyData}
+		/>
+	);
 }

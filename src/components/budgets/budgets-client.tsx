@@ -5,12 +5,12 @@ import { CategoryList } from "@/components/budgets/category-list";
 import { BudgetForm } from "@/components/budgets/budget-form";
 import { BudgetsSkeleton } from "@/components/budgets/page-skeleton";
 import type { BudgetSetting } from "@/components/budgets/types";
+import { getBudgets } from "@/lib/supabase/budgets";
 import {
-	getBudgets,
-	addBudget,
-	updateBudget,
-	deleteBudget,
-} from "@/lib/supabase/budgets";
+	addBudgetAction,
+	updateBudgetAction,
+	deleteBudgetAction,
+} from "@/app/(authenticated)/budgets/actions";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 export default function BudgetsClient() {
@@ -40,7 +40,7 @@ export default function BudgetsClient() {
 			if (user) {
 				loadBudgets();
 			} else {
-				setIsLoading(false);
+				setTimeout(() => setIsLoading(false), 0);
 			}
 		}
 	}, [user, isUserLoading]);
@@ -56,7 +56,7 @@ export default function BudgetsClient() {
 		try {
 			if (editingSetting) {
 				// 編集モード
-				const updated = await updateBudget(editingSetting.id, {
+				const updated = await updateBudgetAction(editingSetting.id, {
 					name,
 					budget,
 					color,
@@ -70,7 +70,7 @@ export default function BudgetsClient() {
 				setEditingSetting(null);
 			} else {
 				// 新規追加
-				const added = await addBudget(user.id, {
+				const added = await addBudgetAction(user.id, {
 					name,
 					budget,
 					color,
@@ -93,7 +93,7 @@ export default function BudgetsClient() {
 	const handleDelete = async (id: string) => {
 		if (!confirm("このカテゴリを削除しますか？")) return;
 
-		const result = await deleteBudget(id);
+		const result = await deleteBudgetAction(id);
 		if (result.success) {
 			setSettings(settings.filter((item) => item.id !== id));
 			// 編集中のカテゴリが削除された場合は編集フォームをリセット

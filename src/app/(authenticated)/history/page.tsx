@@ -1,5 +1,8 @@
 import HistoryClient from "@/components/history/history-client";
-import { getCurrentUser } from "@/lib/supabase/dal";
+import {
+	getAvailableYears,
+	getYearlyHistoryList,
+} from "@/lib/supabase/history";
 
 export const metadata = {
 	title: "支出履歴 - Budget Lens",
@@ -7,7 +10,18 @@ export const metadata = {
 };
 
 export default async function HistoryPage() {
-	const user = await getCurrentUser();
+	// 履歴データが存在する年の一覧を取得
+	const availableYears = await getAvailableYears();
+	const defaultYear = availableYears[0] || new Date().getFullYear();
 
-	return <HistoryClient user={user} />;
+	// 初期表示する年（最新の年）の履歴データを取得
+	const initialHistoryList = await getYearlyHistoryList(defaultYear);
+
+	return (
+		<HistoryClient
+			availableYears={availableYears}
+			initialHistoryList={initialHistoryList}
+			defaultYear={defaultYear}
+		/>
+	);
 }

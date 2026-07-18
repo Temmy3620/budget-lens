@@ -1,41 +1,52 @@
 "use client";
 
 import { useState } from "react";
-import { MOCK_HISTORY_DATA } from "@/components/history/mock-data";
+import type { MonthlyHistorySummary } from "@/components/history/types";
 import { ValueSelector } from "@/components/ui/value-selector";
 import { HistoryMonthCard } from "./history-month-card";
+import { getYearlyHistoryAction } from "@/app/(authenticated)/history/actions";
 
 interface HistoryClientProps {
-	user: {
-		id: string;
-		email: string;
-	} | null;
+	availableYears: number[];
+	initialHistoryList: MonthlyHistorySummary[];
+	defaultYear: number;
 }
 
-export default function HistoryClient({ user }: HistoryClientProps) {
-	// モックデータに含まれる年を抽出
-	const availableYears = MOCK_HISTORY_DATA.map((d) => d.year).sort(
-		(a, b) => b - a,
-	);
-	const [selectedYear, setSelectedYear] = useState<number>(
-		availableYears[0] || 2026,
-	);
+export default function HistoryClient({
+	availableYears,
+	initialHistoryList,
+	defaultYear,
+}: HistoryClientProps) {
+	const [selectedYear, setSelectedYear] = useState<number>(defaultYear);
+	const [historyList, setHistoryList] =
+		useState<MonthlyHistorySummary[]>(initialHistoryList);
+	const [isLoading, setIsLoading] = useState(false);
 
-	// 選択された年の履歴データを取得
-	const yearData = MOCK_HISTORY_DATA.find((d) => d.year === selectedYear);
+	// 年データの取得・切り替えハンドラー
+	const changeYear = async (year: number) => {
+		setSelectedYear(year);
+		setIsLoading(true);
+		try {
+			const data = await getYearlyHistoryAction(year);
+			setHistoryList(data);
+		} catch (error) {
+			console.error("Failed to load history list for year:", year, error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-	// 前の年・次の年への切り替えハンドラー
 	const handlePrevYear = () => {
 		const currentIndex = availableYears.indexOf(selectedYear);
 		if (currentIndex < availableYears.length - 1) {
-			setSelectedYear(availableYears[currentIndex + 1]);
+			changeYear(availableYears[currentIndex + 1]);
 		}
 	};
 
 	const handleNextYear = () => {
 		const currentIndex = availableYears.indexOf(selectedYear);
 		if (currentIndex > 0) {
-			setSelectedYear(availableYears[currentIndex - 1]);
+			changeYear(availableYears[currentIndex - 1]);
 		}
 	};
 
@@ -69,9 +80,13 @@ export default function HistoryClient({ user }: HistoryClientProps) {
 			</div>
 
 			{/* 月別サマリーカードリスト */}
-			{yearData && yearData.months.length > 0 ? (
+			{isLoading ? (
+				<div className="rounded-2xl border border-dashed border-white/5 bg-white/[0.01] p-16 text-center text-slate-500 backdrop-blur-sm animate-pulse">
+					<p className="text-sm font-semibold">データを読み込み中...</p>
+				</div>
+			) : historyList && historyList.length > 0 ? (
 				<div className="grid gap-6">
-					{yearData.months
+					{historyList
 						.sort((a, b) => b.month - a.month) // 新しい月が上に来るようにソート
 						.map((summary) => (
 							<HistoryMonthCard

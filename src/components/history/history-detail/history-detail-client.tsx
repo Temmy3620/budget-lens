@@ -1,29 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { MOCK_HISTORY_DATA } from "@/components/history/mock-data";
+import type { MonthlyHistorySummary } from "@/components/history/types";
 import { CategorySpentChart } from "@/components/ui/category-spent-chart";
 import { ExpenseHistoryList } from "./expense-history-list";
 import { CategoryBudgetProgressList } from "@/components/ui/category-budget-progress";
 import { calculateCategorySpent } from "@/lib/supabase/expenses";
 
 interface HistoryDetailClientProps {
-	user: {
-		id: string;
-		email: string;
-	} | null;
 	year: number;
 	month: number;
+	initialData: MonthlyHistorySummary | null;
 }
 
 export default function HistoryDetailClient({
-	user,
 	year,
 	month,
+	initialData,
 }: HistoryDetailClientProps) {
-	// モックデータから該当する年・月のデータを検索
-	const yearData = MOCK_HISTORY_DATA.find((d) => d.year === year);
-	const monthlyData = yearData?.months.find((m) => m.month === month);
+	const monthlyData = initialData;
 
 	if (!monthlyData) {
 		return (
