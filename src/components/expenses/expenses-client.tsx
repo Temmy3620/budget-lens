@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { BudgetSetting } from "@/components/budgets/types";
-import { getBudgets } from "@/lib/supabase/budgets";
 import {
 	type Expense,
 	deleteExpense,
-	getExpenses,
 	calculateCategorySpent,
 } from "@/lib/supabase/expenses";
 import { ExpenseFormModal } from "./expense-form-modal";
@@ -14,66 +12,36 @@ import { ExpenseList } from "./expense-list";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { CategoryBudgetProgressList } from "@/components/ui/category-budget-progress";
 
-export default function ExpensesClient() {
-	const { user, isLoading: isUserLoading } = useCurrentUser();
-	const [expenses, setExpenses] = useState<Expense[]>([]);
-	const [budgets, setBudgets] = useState<BudgetSetting[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
+interface ExpensesClientProps {
+	initialBudgets: BudgetSetting[];
+	initialExpenses: Expense[];
+}
+
+export default function ExpensesClient({
+	initialBudgets,
+	initialExpenses,
+}: ExpensesClientProps) {
+	const { user } = useCurrentUser();
+	const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
+	const [budgets] = useState<BudgetSetting[]>(initialBudgets);
 
 	// 表示対象の年月 (YYYY-MM 形式)
-	const [currentMonth, setCurrentMonth] = useState("");
+	const [currentMonth] = useState(() => {
+		const now = new Date();
+		return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+	});
 
 	// 実行時の「今月」 (YYYY-MM 形式)
-	const [thisMonth, setThisMonth] = useState("");
+	const [thisMonth] = useState(() => {
+		const now = new Date();
+		return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+	});
 
 	// モーダルの表示状態
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	// 編集中の出費データ
 	const [expenseToEdit, setExpenseToEdit] = useState<Expense | null>(null);
-
-	useEffect(() => {
-		async function loadData() {
-			if (!user) return;
-			const now = new Date();
-			const yyyy = now.getFullYear();
-			const mm = String(now.getMonth() + 1).padStart(2, "0");
-
-			try {
-				const [budgetsData, expensesData] = await Promise.all([
-					getBudgets(user.id),
-					getExpenses(user.id),
-				]);
-				setBudgets(budgetsData);
-				setExpenses(expensesData);
-
-				// 初期年月をクライアントマウント時にセット
-				setCurrentMonth(`${yyyy}-${mm}`);
-				setThisMonth(`${yyyy}-${mm}`);
-			} catch (error) {
-				console.error("Failed to load data:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		}
-		if (!isUserLoading) {
-			if (user) {
-				loadData();
-			} else {
-				setTimeout(() => setIsLoading(false), 0);
-			}
-		}
-	}, [user, isUserLoading]);
-
-	if (isLoading) {
-		return (
-			<main className="flex-1 p-6 md:p-10 max-w-6xl mx-auto w-full space-y-8 animate-pulse">
-				<div className="h-10 bg-white/5 rounded-xl w-48 mb-4" />
-				<div className="h-24 bg-white/5 rounded-2xl w-full" />
-				<div className="h-96 bg-white/5 rounded-2xl w-full" />
-			</main>
-		);
-	}
 
 	// 表示対象月(YYYY-MM)に合致する出費のみを抽出（作成日時の若い順＝古い順でソート）
 	const filteredExpenses = expenses

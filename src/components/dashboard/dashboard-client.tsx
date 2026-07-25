@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import type { BudgetSetting } from "@/components/budgets/types";
-import { getBudgets } from "@/lib/supabase/budgets";
-import { type Expense, getExpenses } from "@/lib/supabase/expenses";
+import type { Expense } from "@/lib/supabase/expenses";
 import { CategorySpentChart } from "@/components/ui/category-spent-chart";
 import { DashboardStats } from "./dashboard-stats";
 import { RecentExpenses } from "./recent-expenses";
@@ -13,52 +11,15 @@ interface DashboardClientProps {
 		id: string;
 		email: string;
 	} | null;
+	initialBudgets: BudgetSetting[];
+	initialExpenses: Expense[];
 }
 
-export default function DashboardClient({ user }: DashboardClientProps) {
-	const [budgets, setBudgets] = useState<BudgetSetting[]>([]);
-	const [expenses, setExpenses] = useState<Expense[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
-
-	useEffect(() => {
-		async function loadData() {
-			if (!user) return;
-			try {
-				const [budgetsData, expensesData] = await Promise.all([
-					getBudgets(user.id),
-					getExpenses(user.id),
-				]);
-				setBudgets(budgetsData);
-				setExpenses(expensesData);
-			} catch (error) {
-				console.error("Failed to load dashboard data:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		}
-		loadData();
-	}, [user]);
-
-	if (isLoading) {
-		return (
-			<main className="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full space-y-8 animate-pulse">
-				{/* ウェルカムセクションのプレースホルダー */}
-				<div className="h-48 bg-white/5 rounded-3xl w-full" />
-				{/* クイック統計のプレースホルダー */}
-				<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-					<div className="h-32 bg-white/5 rounded-2xl w-full" />
-					<div className="h-32 bg-white/5 rounded-2xl w-full" />
-					<div className="h-32 bg-white/5 rounded-2xl w-full" />
-				</div>
-				{/* 二段目のグリッドのプレースホルダー */}
-				<div className="grid gap-8 lg:grid-cols-3">
-					<div className="lg:col-span-2 h-96 bg-white/5 rounded-2xl w-full" />
-					<div className="h-96 bg-white/5 rounded-2xl w-full" />
-				</div>
-			</main>
-		);
-	}
-
+export default function DashboardClient({
+	user,
+	initialBudgets: budgets,
+	initialExpenses: expenses,
+}: DashboardClientProps) {
 	const now = new Date();
 	const currentYear = now.getFullYear();
 	const currentMonthNum = now.getMonth() + 1;

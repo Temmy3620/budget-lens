@@ -1,49 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CategoryList } from "@/components/budgets/category-list";
 import { BudgetForm } from "@/components/budgets/budget-form";
-import { BudgetsSkeleton } from "@/components/budgets/page-skeleton";
 import type { BudgetSetting } from "@/components/budgets/types";
-import { getBudgets } from "@/lib/supabase/budgets";
 import {
 	addBudgetAction,
 	updateBudgetAction,
 	deleteBudgetAction,
 } from "@/app/(authenticated)/budgets/actions";
-import { useCurrentUser } from "@/hooks/use-current-user";
 
-export default function BudgetsClient() {
-	const { user, isLoading: isUserLoading } = useCurrentUser();
+interface BudgetsClientProps {
+	initialSettings: BudgetSetting[];
+	userId: string;
+}
+
+export default function BudgetsClient({
+	initialSettings,
+	userId,
+}: BudgetsClientProps) {
 	// 初期の設定済みカテゴリと予算のリスト (ステートで管理)
-	const [settings, setSettings] = useState<BudgetSetting[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
+	const [settings, setSettings] = useState<BudgetSetting[]>(initialSettings);
 
 	// 編集中のステート
 	const [editingSetting, setEditingSetting] = useState<BudgetSetting | null>(
 		null,
 	);
-
-	useEffect(() => {
-		async function loadBudgets() {
-			if (!user) return;
-			try {
-				const data = await getBudgets(user.id);
-				setSettings(data);
-			} catch (error) {
-				console.error("Failed to load budgets:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		}
-		if (!isUserLoading) {
-			if (user) {
-				loadBudgets();
-			} else {
-				setTimeout(() => setIsLoading(false), 0);
-			}
-		}
-	}, [user, isUserLoading]);
 
 	// 予算の保存（追加または更新）
 	const handleSave = async (
@@ -52,7 +34,7 @@ export default function BudgetsClient() {
 		color: string,
 		memo: string,
 	) => {
-		if (!user) return;
+		if (!userId) return;
 		try {
 			if (editingSetting) {
 				// 編集モード
@@ -70,7 +52,7 @@ export default function BudgetsClient() {
 				setEditingSetting(null);
 			} else {
 				// 新規追加
-				const added = await addBudgetAction(user.id, {
+				const added = await addBudgetAction(userId, {
 					name,
 					budget,
 					color,
@@ -107,10 +89,6 @@ export default function BudgetsClient() {
 
 	// 合計予算額
 	const totalBudget = settings.reduce((sum, item) => sum + item.budget, 0);
-
-	if (isLoading) {
-		return <BudgetsSkeleton />;
-	}
 
 	return (
 		<main className="flex-1 p-6 md:p-10 max-w-6xl mx-auto w-full space-y-8 animate-fade-in">

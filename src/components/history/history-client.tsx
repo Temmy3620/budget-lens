@@ -5,6 +5,7 @@ import type { MonthlyHistorySummary } from "@/components/history/types";
 import { ValueSelector } from "@/components/ui/value-selector";
 import { HistoryMonthCard } from "./history-month-card";
 import { getYearlyHistoryAction } from "@/app/(authenticated)/history/actions";
+import { HistoryCardSkeleton } from "./card-skeleton";
 
 interface HistoryClientProps {
 	availableYears: number[];
@@ -81,9 +82,7 @@ export default function HistoryClient({
 
 			{/* 月別サマリーカードリスト */}
 			{isLoading ? (
-				<div className="rounded-2xl border border-dashed border-white/5 bg-white/[0.01] p-16 text-center text-slate-500 backdrop-blur-sm animate-pulse">
-					<p className="text-sm font-semibold">データを読み込み中...</p>
-				</div>
+				<HistoryCardSkeleton />
 			) : historyList && historyList.length > 0 ? (
 				<div className="grid gap-6">
 					{historyList
