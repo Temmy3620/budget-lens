@@ -6,6 +6,13 @@ import {
 } from "@/lib/supabase/expenses";
 import { useEffect, useState } from "react";
 import { DatePicker } from "@/components/ui/date-picker";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 interface ExpenseFormModalProps {
 	onClose: () => void;
@@ -153,18 +160,22 @@ export function ExpenseFormModal({
 								カテゴリが設定されていません。先に「予算管理」画面からカテゴリを登録してください。
 							</div>
 						) : (
-							<select
-								id="modal-budgetId"
+							<Select
 								value={selectedBudgetId}
-								onChange={(e) => setSelectedBudgetId(e.target.value)}
-								className="w-full bg-[#030616]/80 border border-white/10 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-violet-500 transition-colors shadow-inner"
+								onValueChange={(val) => setSelectedBudgetId(val || "")}
+								items={budgets.map((b) => ({ label: b.name, value: b.id }))}
 							>
-								{budgets.map((b) => (
-									<option key={b.id} value={b.id}>
-										{b.name}
-									</option>
-								))}
-							</select>
+								<SelectTrigger className="w-full bg-[#030616]/80 border border-white/10 text-slate-200 text-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-violet-500/50 hover:border-white/20 transition-all cursor-pointer rounded-xl">
+									<SelectValue placeholder="カテゴリを選択" />
+								</SelectTrigger>
+								<SelectContent className="bg-slate-950 border-white/10 text-slate-200">
+									{budgets.map((b) => (
+										<SelectItem key={b.id} value={b.id}>
+											{b.name}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 						)}
 					</div>
 

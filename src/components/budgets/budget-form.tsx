@@ -3,6 +3,13 @@
 import { useState } from "react";
 import { COLOR_VARIANTS } from "./types";
 import type { BudgetSetting } from "./types";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 interface BudgetFormProps {
 	editingSetting: BudgetSetting | null;
@@ -85,17 +92,22 @@ export function BudgetForm({
 						<span
 							className={`w-6 h-6 rounded-full bg-gradient-to-r ${color} shrink-0`}
 						/>
-						<select
+						<Select
 							value={color}
-							onChange={(e) => setColor(e.target.value)}
-							className="w-full rounded-xl bg-slate-900 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-violet-500 transition-colors cursor-pointer"
+							onValueChange={(val) => setColor(val || COLOR_VARIANTS[0].value)}
+							items={COLOR_VARIANTS}
 						>
-							{COLOR_VARIANTS.map((variant) => (
-								<option key={variant.value} value={variant.value}>
-									{variant.label}
-								</option>
-							))}
-						</select>
+							<SelectTrigger className="w-full rounded-xl bg-slate-900 border border-white/10 text-slate-200 text-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-violet-500/50 hover:border-white/20 transition-all cursor-pointer">
+								<SelectValue placeholder="カラーを選択" />
+							</SelectTrigger>
+							<SelectContent className="bg-slate-950 border-white/10 text-slate-200">
+								{COLOR_VARIANTS.map((variant) => (
+									<SelectItem key={variant.value} value={variant.value}>
+										{variant.label}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
 					</div>
 				</div>
 
