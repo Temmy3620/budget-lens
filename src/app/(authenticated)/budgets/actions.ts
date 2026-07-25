@@ -13,7 +13,10 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 
 // 履歴スナップショットを生成して保存するヘルパー関数
-async function saveBudgetHistorySnapshot(userId: string, supabase: SupabaseClient) {
+async function saveBudgetHistorySnapshot(
+	userId: string,
+	supabase: SupabaseClient,
+) {
 	// 該当ユーザーの全予算設定を取得
 	const allBudgets = await getBudgets(userId, supabase);
 
