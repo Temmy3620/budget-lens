@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import { useActionState, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { login, signup } from "./actions";
 
 export default function LoginPage() {
 	const [mode, setMode] = useState<"login" | "signup">("login");
+	const [showPassword, setShowPassword] = useState(false);
 	const [loginState, loginAction, loginPending] = useActionState(
 		login,
 		undefined,
@@ -171,15 +173,35 @@ export default function LoginPage() {
 									>
 										パスワード
 									</label>
-									<input
-										id="password"
-										name="password"
-										type="password"
-										autoComplete={isLogin ? "current-password" : "new-password"}
-										required
-										className="relative block w-full rounded-lg border border-[#31395c] bg-gradient-to-r from-[#131835] to-[#1a183d] px-4 py-3 text-white placeholder-slate-600 focus:z-10 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 sm:text-sm transition-colors duration-200"
-										placeholder="入力"
-									/>
+									<div className="relative">
+										<input
+											id="password"
+											name="password"
+											type={showPassword ? "text" : "password"}
+											autoComplete={
+												isLogin ? "current-password" : "new-password"
+											}
+											required
+											className="relative block w-full rounded-lg border border-[#31395c] bg-gradient-to-r from-[#131835] to-[#1a183d] pl-4 pr-12 py-3 text-white placeholder-slate-600 focus:z-10 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 sm:text-sm transition-colors duration-200"
+											placeholder="入力"
+										/>
+										<button
+											type="button"
+											onClick={() => setShowPassword(!showPassword)}
+											className="absolute right-3 top-1/2 -translate-y-1/2 z-20 text-slate-400 hover:text-white transition-colors duration-150 cursor-pointer flex items-center justify-center p-1"
+											aria-label={
+												showPassword
+													? "パスワードを非表示にする"
+													: "パスワードを表示する"
+											}
+										>
+											{showPassword ? (
+												<EyeOff className="h-5 w-5" />
+											) : (
+												<Eye className="h-5 w-5" />
+											)}
+										</button>
+									</div>
 									{activeState?.errors?.password && (
 										<p className="mt-1.5 text-xs text-rose-400">
 											{activeState.errors.password[0]}
