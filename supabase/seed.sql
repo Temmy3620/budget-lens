@@ -10,9 +10,72 @@
 -- =========================================================================
 -- 1. 既存のデモデータのクリーンアップ
 -- =========================================================================
-DELETE FROM public.expenses WHERE user_id = 'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310';
-DELETE FROM public.budget_histories WHERE user_id = 'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310';
-DELETE FROM public.budgets WHERE user_id = 'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310';
+-- ON DELETE CASCADE が設定されているため、auth.users を削除すると
+-- 関連する public.users、budgets、expenses も自動的に削除されます。
+DELETE FROM auth.identities WHERE user_id = 'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310';
+DELETE FROM auth.users WHERE id = 'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310';
+
+-- =========================================================================
+-- 1.3 認証用デモユーザーの作成 (auth.users / auth.identities)
+-- =========================================================================
+-- パスワード: password123
+INSERT INTO auth.users (
+  instance_id,
+  id,
+  aud,
+  role,
+  email,
+  encrypted_password,
+  email_confirmed_at,
+  recovery_sent_at,
+  last_sign_in_at,
+  raw_app_meta_data,
+  raw_user_meta_data,
+  created_at,
+  updated_at,
+  confirmation_token,
+  email_change,
+  email_change_token_new,
+  recovery_token
+) VALUES (
+  '00000000-0000-0000-0000-000000000000',
+  'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310',
+  'authenticated',
+  'authenticated',
+  'demo-user@example.com',
+  crypt('password123', gen_salt('bf')),
+  now(),
+  now(),
+  now(),
+  '{"provider":"email","providers":["email"]}',
+  '{"name":"デモユーザー"}',
+  now(),
+  now(),
+  '',
+  '',
+  '',
+  ''
+);
+
+INSERT INTO auth.identities (
+  id,
+  user_id,
+  identity_data,
+  provider,
+  provider_id,
+  last_sign_in_at,
+  created_at,
+  updated_at
+) VALUES (
+  'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310',
+  'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310',
+  jsonb_build_object('sub', 'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310', 'email', 'demo-user@example.com'),
+  'email',
+  'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310',
+  now(),
+  now(),
+  now()
+);
 
 -- =========================================================================
 -- 1.5 ユーザープロフィールの作成 (public.users)
@@ -21,10 +84,9 @@ DELETE FROM public.budgets WHERE user_id = 'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310
 INSERT INTO public.users (id, email, name)
 VALUES (
   'f120cef0-d9fd-4b1d-91f0-9e2dcb83d310',
-  'demo-user@example.com', -- 必要に応じて本物のメールアドレスに書き換えてください
+  'demo-user@example.com',
   'デモユーザー'
-)
-ON CONFLICT (id) DO NOTHING;
+);
 
 -- =========================================================================
 -- 2. 予算カテゴリデータの作成 (public.budgets)
