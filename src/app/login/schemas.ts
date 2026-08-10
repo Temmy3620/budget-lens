@@ -1,7 +1,24 @@
 import { z } from "zod";
 
-// フォーム入力バリデーションスキーマ
+// ログイン用フォーム入力バリデーションスキーマ
 export const LoginFormSchema = z.object({
+	email: z
+		.string()
+		.email({ message: "有効なメールアドレスを入力してください。" })
+		.trim(),
+	password: z
+		.string()
+		.min(6, { message: "パスワードは6文字以上である必要があります。" })
+		.trim(),
+});
+
+// 会員登録用フォーム入力バリデーションスキーマ
+export const SignUpFormSchema = z.object({
+	name: z
+		.string()
+		.min(1, { message: "名前を入力してください。" })
+		.max(50, { message: "名前は50文字以内で入力してください。" })
+		.trim(),
 	email: z
 		.string()
 		.email({ message: "有効なメールアドレスを入力してください。" })
@@ -15,6 +32,7 @@ export const LoginFormSchema = z.object({
 export type FormState =
 	| {
 			errors?: {
+				name?: string[];
 				email?: string[];
 				password?: string[];
 				_form?: string[];
