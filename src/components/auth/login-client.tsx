@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import Link from "next/link";
 import type { FormState } from "@/types/form";
 import type { LoginFormErrors, SignupFormErrors } from "@/types/auth";
 import { KeyVisual } from "@/components/auth/key-visual";
@@ -45,6 +46,14 @@ export default function LoginClient({
 
 			{/* ================= 右カラム: ログインフォームエリア ================= */}
 			<div className="w-full md:w-[460px] lg:w-[500px] flex flex-col justify-center px-8 py-16 md:px-12 bg-[#0a0f24]/30 backdrop-blur-xl relative">
+				{/* LPへ戻るリンク */}
+				<Link
+					href="/"
+					className="absolute top-6 left-8 text-xs font-semibold text-[#8c9fc2]/60 hover:text-white transition-colors duration-200 cursor-pointer"
+				>
+					← LPへ戻る
+				</Link>
+
 				{/* 背景のグラデーション光彩球 */}
 				<div className="absolute top-[30%] right-[10%] -z-10 h-72 w-72 rounded-full bg-cyan-500/10 blur-[80px] pointer-events-none" />
 				<div className="absolute bottom-[20%] right-[20%] -z-10 h-64 w-64 rounded-full bg-indigo-500/10 blur-[90px] pointer-events-none" />
