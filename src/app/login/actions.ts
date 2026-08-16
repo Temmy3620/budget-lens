@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { type FormState, LoginFormSchema, SignUpFormSchema } from "./schemas";
 
@@ -79,6 +80,12 @@ export async function signup(
 	const { name, email, password } = validatedFields.data;
 	const supabase = await createClient();
 
+	// リダイレクト先URLの構築 (開発環境のポート:3005 等に動的に対応)
+	const headersList = await headers();
+	const host = headersList.get("host");
+	const protocol = host?.includes("localhost") ? "http" : "https";
+	const emailRedirectTo = `${protocol}://${host}/auth/callback`;
+
 	// Supabaseでのサインアップ実行
 	const { data, error } = await supabase.auth.signUp({
 		email,
@@ -87,6 +94,7 @@ export async function signup(
 			data: {
 				name,
 			},
+			emailRedirectTo,
 		},
 	});
 
