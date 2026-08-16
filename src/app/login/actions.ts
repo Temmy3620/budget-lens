@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import { type FormState, LoginFormSchema, SignUpFormSchema } from "./schemas";
+import { LoginFormSchema, SignUpFormSchema } from "./schemas";
+import type { LoginFormState, SignUpFormState } from "@/types/auth";
 import {
 	loginWithEmailAndPassword,
 	signUpWithEmailAndPassword,
@@ -14,9 +15,9 @@ import {
  * ログインアクション
  */
 export async function login(
-	_state: FormState,
+	_state: LoginFormState,
 	formData: FormData,
-): Promise<FormState> {
+): Promise<LoginFormState> {
 	// バリデーション
 	const validatedFields = LoginFormSchema.safeParse({
 		email: formData.get("email"),
@@ -66,9 +67,9 @@ export async function logout() {
  * 新規登録アクション
  */
 export async function signup(
-	_state: FormState,
+	_state: SignUpFormState,
 	formData: FormData,
-): Promise<FormState> {
+): Promise<SignUpFormState> {
 	// バリデーション
 	const validatedFields = SignUpFormSchema.safeParse({
 		name: formData.get("name"),

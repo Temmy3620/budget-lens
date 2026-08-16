@@ -1,10 +1,11 @@
-import type { FormState } from "@/app/login/schemas";
+import type { FormState } from "@/types/form";
+import type { LoginFormErrors } from "@/types/auth";
 import { PasswordInput } from "@/components/ui/password-input";
 
 interface LoginFormProps {
 	action: (payload: FormData) => void;
 	pending: boolean;
-	state: FormState | undefined;
+	state: FormState<LoginFormErrors>;
 }
 
 export function LoginForm({ action, pending, state }: LoginFormProps) {

@@ -28,16 +28,3 @@ export const SignUpFormSchema = z.object({
 		.min(6, { message: "パスワードは6文字以上である必要があります。" })
 		.trim(),
 });
-
-export type FormState =
-	| {
-			errors?: {
-				name?: string[];
-				email?: string[];
-				password?: string[];
-				_form?: string[];
-			};
-			message?: string;
-			success?: boolean;
-	  }
-	| undefined;

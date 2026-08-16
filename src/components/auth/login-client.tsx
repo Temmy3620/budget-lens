@@ -1,20 +1,35 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { login, signup } from "@/app/login/actions";
+import type { FormState } from "@/types/form";
+import type { LoginFormErrors, SignupFormErrors } from "@/types/auth";
 import { KeyVisual } from "@/components/auth/key-visual";
 import { SuccessMessage } from "@/components/auth/success-message";
 import { LoginForm } from "@/components/auth/login-form";
 import { SignupForm } from "@/components/auth/signup-form";
 
-export default function LoginClient() {
+interface LoginClientProps {
+	loginAction: (
+		state: FormState<LoginFormErrors>,
+		formData: FormData,
+	) => Promise<FormState<LoginFormErrors>>;
+	signupAction: (
+		state: FormState<SignupFormErrors>,
+		formData: FormData,
+	) => Promise<FormState<SignupFormErrors>>;
+}
+
+export default function LoginClient({
+	loginAction,
+	signupAction,
+}: LoginClientProps) {
 	const [mode, setMode] = useState<"login" | "signup">("login");
-	const [loginState, loginAction, loginPending] = useActionState(
-		login,
+	const [loginState, runLogin, loginPending] = useActionState(
+		loginAction,
 		undefined,
 	);
-	const [signupState, signupAction, signupPending] = useActionState(
-		signup,
+	const [signupState, runSignup, signupPending] = useActionState(
+		signupAction,
 		undefined,
 	);
 
@@ -78,13 +93,13 @@ export default function LoginClient() {
 						/>
 					) : isLogin ? (
 						<LoginForm
-							action={loginAction}
+							action={runLogin}
 							pending={loginPending}
 							state={loginState}
 						/>
 					) : (
 						<SignupForm
-							action={signupAction}
+							action={runSignup}
 							pending={signupPending}
 							state={signupState}
 						/>

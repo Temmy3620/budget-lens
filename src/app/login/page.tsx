@@ -1,6 +1,7 @@
 import LoginClient from "@/components/auth/login-client";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { login, signup } from "./actions";
 
 export const metadata = {
 	title: "ログイン - Budget Lens",
@@ -19,6 +20,6 @@ export default async function LoginPage() {
 		redirect("/");
 	}
 
-	return <LoginClient />;
+	return <LoginClient loginAction={login} signupAction={signup} />;
 }
 
