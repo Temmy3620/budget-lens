@@ -42,12 +42,13 @@ export async function updateSession(request: NextRequest) {
 	} = await supabase.auth.getUser();
 
 	const isLoginPage = request.nextUrl.pathname.startsWith("/login");
+	const isRootPage = request.nextUrl.pathname === "/";
 	const isAuthApi =
 		request.nextUrl.pathname.startsWith("/api/auth") ||
 		request.nextUrl.pathname.startsWith("/auth");
 
-	// 未ログイン時にログイン画面や認証関連以外のページにアクセスした場合
-	if (!user && !isLoginPage && !isAuthApi) {
+	// 未ログイン時にログイン画面、ルート(LP)、認証関連以外のページにアクセスした場合
+	if (!user && !isLoginPage && !isRootPage && !isAuthApi) {
 		// APIリクエストの場合はリダイレクトせず、401エラーのJSONを返す
 		if (request.nextUrl.pathname.startsWith("/api")) {
 			return NextResponse.json(
@@ -60,10 +61,10 @@ export async function updateSession(request: NextRequest) {
 		return NextResponse.redirect(url);
 	}
 
-	// ログイン済みのユーザーがログイン画面にアクセスした場合、ルートへ転送
+	// ログイン済みのユーザーがログイン画面にアクセスした場合、ダッシュボードへ転送
 	if (user && isLoginPage) {
 		const url = request.nextUrl.clone();
-		url.pathname = "/";
+		url.pathname = "/dashboard";
 		return NextResponse.redirect(url);
 	}
 
