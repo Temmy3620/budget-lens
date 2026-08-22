@@ -42,7 +42,7 @@ export async function resetPassword(
 		};
 	}
 
-	// キャッシュの再検証とルートへの遷移
+	// キャッシュの再検証とダッシュボードへの遷移
 	revalidatePath("/", "layout");
-	redirect("/");
+	redirect("/dashboard");
 }

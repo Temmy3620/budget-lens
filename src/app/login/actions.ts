@@ -45,9 +45,9 @@ export async function login(
 		};
 	}
 
-	// キャッシュの再検証とルートへの遷移
+	// キャッシュの再検証とダッシュボードへの遷移
 	revalidatePath("/", "layout");
-	redirect("/");
+	redirect("/dashboard");
 }
 
 /**
@@ -100,10 +100,10 @@ export async function signup(
 			emailRedirectTo,
 		);
 
-		// 自動ログインできた（セッションが確立した）場合はトップページへ遷移
+		// 自動ログインできた（セッションが確立した）場合はダッシュボードへ遷移
 		if (data.session) {
 			revalidatePath("/", "layout");
-			redirect("/");
+			redirect("/dashboard");
 		} else {
 			// メール確認が必要な場合
 			return {

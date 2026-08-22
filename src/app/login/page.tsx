@@ -19,9 +19,9 @@ export default async function LoginPage({ searchParams }: PageProps) {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	// すでにログイン済みの場合はトップページへリダイレクト
+	// すでにログイン済みの場合はダッシュボードへリダイレクト
 	if (user) {
-		redirect("/");
+		redirect("/dashboard");
 	}
 
 	const resolvedSearchParams = await searchParams;

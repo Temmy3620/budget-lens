@@ -14,9 +14,9 @@ export default async function ForgotPasswordPage() {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	// すでにログイン済みの場合はトップページへリダイレクト
+	// すでにログイン済みの場合はダッシュボードへリダイレクト
 	if (user) {
-		redirect("/");
+		redirect("/dashboard");
 	}
 
 	return <ForgotPasswordClient sendResetEmailAction={sendResetEmail} />;
