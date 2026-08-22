@@ -25,7 +25,8 @@ export default async function LoginPage({ searchParams }: PageProps) {
 	}
 
 	const resolvedSearchParams = await searchParams;
-	const initialMode = resolvedSearchParams.mode === "signup" ? "signup" : "login";
+	const initialMode =
+		resolvedSearchParams.mode === "signup" ? "signup" : "login";
 
 	return (
 		<LoginClient
@@ -35,4 +36,3 @@ export default async function LoginPage({ searchParams }: PageProps) {
 		/>
 	);
 }
-

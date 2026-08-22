@@ -45,11 +45,14 @@ export const getCurrentUser = cache(async () => {
 			.maybeSingle();
 
 		if (!profile) {
-			await supabase.from("users").insert({
+			const { error: insertError } = await supabase.from("users").insert({
 				id: user.id,
 				email: user.email ?? "",
 				name: user.user_metadata?.name ?? "新規ユーザー",
 			});
+			if (insertError) {
+				console.error("JIT Sync insert error detail:", insertError);
+			}
 		}
 	} catch (err) {
 		console.error("Failed to synchronize user profile in JIT logic:", err);

@@ -78,20 +78,22 @@ export default function LoginClient({
 						<button
 							type="button"
 							onClick={() => setMode("login")}
-							className={`flex-1 pb-4 border-b-2 tracking-wider font-semibold transition-colors duration-200 cursor-pointer ${isLogin
-								? "border-violet-500 text-white"
-								: "border-transparent text-slate-500 hover:text-slate-300"
-								}`}
+							className={`flex-1 pb-4 border-b-2 tracking-wider font-semibold transition-colors duration-200 cursor-pointer ${
+								isLogin
+									? "border-violet-500 text-white"
+									: "border-transparent text-slate-500 hover:text-slate-300"
+							}`}
 						>
 							ログイン
 						</button>
 						<button
 							type="button"
 							onClick={() => setMode("signup")}
-							className={`flex-1 pb-4 border-b-2 tracking-wider font-semibold transition-colors duration-200 cursor-pointer ${!isLogin
-								? "border-violet-500 text-white"
-								: "border-transparent text-slate-500 hover:text-slate-300"
-								}`}
+							className={`flex-1 pb-4 border-b-2 tracking-wider font-semibold transition-colors duration-200 cursor-pointer ${
+								!isLogin
+									? "border-violet-500 text-white"
+									: "border-transparent text-slate-500 hover:text-slate-300"
+							}`}
 						>
 							会員登録
 						</button>

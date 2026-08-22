@@ -82,15 +82,18 @@ export default async function LandingPage() {
 							新しい「引き算」の予算管理
 						</div>
 						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.15]">
-							「資産管理」はもうやめた。<br />
+							「資産管理」はもうやめた。
+							<br />
 							<span className="bg-gradient-to-r from-[#00d2ff] via-violet-400 to-[#d87cff] bg-clip-text text-transparent">
 								予算の「やりくり」
 							</span>
-							だけに<br />
+							だけに
+							<br />
 							焦点をあてる、新しい家計簿。
 						</h1>
 						<p className="text-slate-400 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
-							面倒な銀行連携や税金の計算は不要。自分でコントロールできる予算枠（やりくり予算）を決め、その中だけで楽しく暮らすための予算管理アプリ「Budget Lens」。
+							面倒な銀行連携や税金の計算は不要。自分でコントロールできる予算枠（やりくり予算）を決め、その中だけで楽しく暮らすための予算管理アプリ「Budget
+							Lens」。
 						</p>
 
 						<div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
@@ -116,7 +119,8 @@ export default async function LandingPage() {
 										今月のやりくり残高
 									</p>
 									<p className="text-3xl font-bold text-white tracking-wide mt-1">
-										¥58,420 <span className="text-xs text-slate-500">/ ¥120,000</span>
+										¥58,420{" "}
+										<span className="text-xs text-slate-500">/ ¥120,000</span>
 									</p>
 								</div>
 								<div className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20">
@@ -130,7 +134,8 @@ export default async function LandingPage() {
 									<div className="flex justify-between text-sm">
 										<span className="font-semibold text-white">🍔 食費</span>
 										<span className="text-slate-400">
-											¥39,000 <span className="text-xs text-slate-600">/ ¥50,000</span>
+											¥39,000{" "}
+											<span className="text-xs text-slate-600">/ ¥50,000</span>
 										</span>
 									</div>
 									<div className="h-3 w-full bg-slate-900 rounded-full overflow-hidden p-[1px]">
@@ -143,9 +148,12 @@ export default async function LandingPage() {
 
 								<div className="space-y-2">
 									<div className="flex justify-between text-sm">
-										<span className="font-semibold text-white">🎨 趣味・推し活</span>
+										<span className="font-semibold text-white">
+											🎨 趣味・推し活
+										</span>
 										<span className="text-slate-400">
-											¥13,500 <span className="text-xs text-slate-600">/ ¥30,000</span>
+											¥13,500{" "}
+											<span className="text-xs text-slate-600">/ ¥30,000</span>
 										</span>
 									</div>
 									<div className="h-3 w-full bg-slate-900 rounded-full overflow-hidden p-[1px]">
@@ -158,9 +166,12 @@ export default async function LandingPage() {
 
 								<div className="space-y-2">
 									<div className="flex justify-between text-sm">
-										<span className="font-semibold text-white">☕ カフェ・日常雑費</span>
+										<span className="font-semibold text-white">
+											☕ カフェ・日常雑費
+										</span>
 										<span className="text-slate-400">
-											¥9,080 <span className="text-xs text-slate-600">/ ¥15,000</span>
+											¥9,080{" "}
+											<span className="text-xs text-slate-600">/ ¥15,000</span>
 										</span>
 									</div>
 									<div className="h-3 w-full bg-slate-900 rounded-full overflow-hidden p-[1px]">
@@ -218,7 +229,8 @@ export default async function LandingPage() {
 								引き算の答え：日々の「やりくり予算」だけに集中する
 							</h3>
 							<p className="text-slate-300 text-sm leading-relaxed">
-								Budget Lensは、日常的に削ったり増やしたりコントロールできる「やりくり費」だけの記録に特化。家賃や保険は除外し、今月の生活費だけで暮らす心地よさを提供します。余分な機能を削ぎ落としたからこそ、続けられます。
+								Budget
+								Lensは、日常的に削ったり増やしたりコントロールできる「やりくり費」だけの記録に特化。家賃や保険は除外し、今月の生活費だけで暮らす心地よさを提供します。余分な機能を削ぎ落としたからこそ、続けられます。
 							</p>
 						</div>
 					</div>
@@ -323,7 +335,8 @@ export default async function LandingPage() {
 								</div>
 								<h3 className="text-lg font-bold text-white">予算を決める</h3>
 								<p className="text-slate-400 text-sm leading-relaxed">
-									今月コントロールしたいカテゴリと枠（例：食費 ¥50,000、推し活 ¥20,000など）を自由に設定します。
+									今月コントロールしたいカテゴリと枠（例：食費 ¥50,000、推し活
+									¥20,000など）を自由に設定します。
 								</p>
 							</div>
 
@@ -352,7 +365,8 @@ export default async function LandingPage() {
 							「あなたのデータは、あなただけのもの」
 						</h2>
 						<p className="text-slate-400 text-sm leading-relaxed">
-							Budget Lensは、堅牢なクラウドインフラであるデータベース「Supabase」を採用。
+							Budget
+							Lensは、堅牢なクラウドインフラであるデータベース「Supabase」を採用。
 							強固な「行レベルセキュリティ（RLS）」の仕組みによって、登録された情報は本人以外のアクセスが完全に遮断され、暗号化されて隔離されます。外部の口座接続データを保管しないため、漏洩や乗っ取りのリスクも極小です。
 						</p>
 						<div className="flex items-center gap-3 text-xs text-slate-500 font-semibold">
@@ -393,7 +407,9 @@ export default async function LandingPage() {
 
 								<div className="space-y-6">
 									<div>
-										<h3 className="text-2xl font-bold text-white">Free (永久無料)</h3>
+										<h3 className="text-2xl font-bold text-white">
+											Free (永久無料)
+										</h3>
 										<p className="text-slate-400 text-xs mt-1">
 											日々のやりくりを美しく可視化する基本プラン
 										</p>
@@ -449,7 +465,8 @@ export default async function LandingPage() {
 
 					<div className="max-w-4xl mx-auto px-6 text-center space-y-8 relative">
 						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight">
-							予算 of レンズ（Lens）を覗いて、<br />
+							予算 of レンズ（Lens）を覗いて、
+							<br />
 							本当に大切なことにお金を使いましょう。
 						</h2>
 						<p className="text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
