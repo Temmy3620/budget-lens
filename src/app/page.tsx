@@ -65,9 +65,9 @@ export default async function LandingPage() {
 						</Link>
 						<Link
 							href="/login?mode=signup"
-							className="relative inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-semibold text-white overflow-hidden bg-gradient-to-r from-violet-600 to-indigo-600 shadow-[0_0_20px_rgba(99,102,241,0.25)] hover:shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all duration-300 cursor-pointer"
+							className="rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_15px_rgba(99,102,241,0.2)] hover:from-violet-500 hover:to-indigo-500 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer"
 						>
-							無料で始める
+							無料体験を開始
 						</Link>
 					</nav>
 				</div>
@@ -92,7 +92,7 @@ export default async function LandingPage() {
 							焦点をあてる、新しい家計簿。
 						</h1>
 						<p className="text-slate-400 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
-							面倒な銀行連携や税金の計算は不要。自分でコントロールできる予算枠（やりくり予算）を決め、その中だけで楽しく暮らすための予算管理アプリ「Budget
+							面倒な銀行連携や税金の計算は不要。自分でコントロールできる予算枠（やりくり予算）を決め、その中での出費・支出を管理する予算管理アプリ「Budget
 							Lens」。
 						</p>
 
@@ -102,7 +102,7 @@ export default async function LandingPage() {
 								className="w-full sm:w-auto flex items-center justify-center gap-2.5 rounded-xl border border-slate-700 bg-slate-900/60 backdrop-blur-md px-8 py-4 text-base font-semibold text-slate-300 hover:text-white hover:border-slate-500 hover:bg-slate-800/80 transition-all duration-200 cursor-pointer"
 							>
 								<Mail className="h-4.5 w-4.5" />
-								メールアドレスで無料で始める
+								メールアドレスで90日間無料体験
 							</Link>
 						</div>
 					</div>
@@ -324,7 +324,7 @@ export default async function LandingPage() {
 								</div>
 								<h3 className="text-lg font-bold text-white">ログイン</h3>
 								<p className="text-slate-400 text-sm leading-relaxed">
-									Google認証またはメールアドレスで10秒でご自身のプライベートスペースを開設できます。
+									メールアドレスで10秒でご自身のプライベートスペースを開設できます。
 								</p>
 							</div>
 
@@ -400,31 +400,31 @@ export default async function LandingPage() {
 						</div>
 
 						<div className="max-w-md mx-auto">
-							<div className="rounded-3xl border-2 border-violet-500 bg-[#090e29] p-8 shadow-[0_0_40px_rgba(124,58,237,0.15)] relative">
-								<div className="absolute top-0 right-8 -translate-y-1/2 px-4 py-1 rounded-full bg-violet-600 text-xs font-bold text-white tracking-wider">
-									人気
-								</div>
-
+							<div className="rounded-3xl border-2 border-violet-500 bg-[#090e29] p-8 shadow-[0_0_40px_rgba(124,58,237,0.15)]">
 								<div className="space-y-6">
 									<div>
 										<h3 className="text-2xl font-bold text-white">
-											Free (永久無料)
+											スタンダードプラン
 										</h3>
 										<p className="text-slate-400 text-xs mt-1">
-											日々のやりくりを美しく可視化する基本プラン
+											日々のやりくりを美しく可視化するすべての機能
 										</p>
 									</div>
 
 									<div className="flex items-baseline text-white">
 										<span className="text-4xl font-extrabold tracking-tight">
-											¥0
+											¥150
 										</span>
 										<span className="ml-1 text-sm font-semibold text-slate-500">
-											/ 永久無料
+											/ 月額 (初回90日間無料)
 										</span>
 									</div>
 
 									<ul className="space-y-4 border-t border-white/5 pt-6 text-sm text-slate-300">
+										<li className="flex items-center gap-3 font-semibold text-violet-400">
+											<span className="text-violet-400 font-bold">✓</span>
+											初回90日間無料トライアル
+										</li>
 										<li className="flex items-center gap-3">
 											<span className="text-violet-400 font-bold">✓</span>
 											予算カテゴリ数無制限
@@ -443,7 +443,7 @@ export default async function LandingPage() {
 										</li>
 										<li className="flex items-center gap-3">
 											<span className="text-violet-400 font-bold">✓</span>
-											セキュアなGoogleアカウント/メール認証
+											セキュアなメールアドレス・パスワード認証
 										</li>
 									</ul>
 
@@ -451,7 +451,7 @@ export default async function LandingPage() {
 										href="/login?mode=signup"
 										className="flex w-full justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-3.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:from-violet-500 hover:to-indigo-500 transition-all duration-200 text-center cursor-pointer"
 									>
-										今すぐ無料で始める
+										90日間無料で試してみる
 									</Link>
 								</div>
 							</div>
@@ -477,7 +477,7 @@ export default async function LandingPage() {
 								href="/login?mode=signup"
 								className="inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-[#00d2ff] to-[#0066ff] px-10 py-5 text-lg font-bold text-white shadow-[0_0_30px_rgba(0,210,255,0.4)] hover:from-[#00e1ff] hover:to-[#0077ff] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
 							>
-								無料で今すぐ体験する
+								90日間無料で試してみる
 								<ChevronRight className="h-5 w-5" />
 							</Link>
 						</div>
