@@ -1,0 +1,23 @@
+import { redirect } from "next/navigation";
+import ForgotPasswordClient from "@/components/auth/forgot-password-client";
+import { createClient } from "@/lib/supabase/server";
+import { sendResetEmail } from "./actions";
+
+export const metadata = {
+	title: "パスワード再設定 - Budget Lens",
+	description: "パスワードを忘れた場合の再設定手続きを行います。",
+};
+
+export default async function ForgotPasswordPage() {
+	const supabase = await createClient();
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+
+	// すでにログイン済みの場合はトップページへリダイレクト
+	if (user) {
+		redirect("/");
+	}
+
+	return <ForgotPasswordClient sendResetEmailAction={sendResetEmail} />;
+}

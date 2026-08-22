@@ -43,12 +43,23 @@ export async function updateSession(request: NextRequest) {
 
 	const isLoginPage = request.nextUrl.pathname.startsWith("/login");
 	const isRootPage = request.nextUrl.pathname === "/";
+	const isForgotPasswordPage =
+		request.nextUrl.pathname.startsWith("/forgot-password");
+	const isResetPasswordPage =
+		request.nextUrl.pathname.startsWith("/reset-password");
 	const isAuthApi =
 		request.nextUrl.pathname.startsWith("/api/auth") ||
 		request.nextUrl.pathname.startsWith("/auth");
 
-	// 未ログイン時にログイン画面、ルート(LP)、認証関連以外のページにアクセスした場合
-	if (!user && !isLoginPage && !isRootPage && !isAuthApi) {
+	// 未ログイン時にログイン画面、ルート(LP)、パスワード忘れた/リセット画面、認証関連以外のページにアクセスした場合
+	if (
+		!user &&
+		!isLoginPage &&
+		!isRootPage &&
+		!isForgotPasswordPage &&
+		!isResetPasswordPage &&
+		!isAuthApi
+	) {
 		// APIリクエストの場合はリダイレクトせず、401エラーのJSONを返す
 		if (request.nextUrl.pathname.startsWith("/api")) {
 			return NextResponse.json(

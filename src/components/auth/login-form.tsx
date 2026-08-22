@@ -1,6 +1,7 @@
-import type { FormState } from "@/types/form";
-import type { LoginFormErrors } from "@/types/auth";
+import Link from "next/link";
 import { PasswordInput } from "@/components/ui/password-input";
+import type { LoginFormErrors } from "@/types/auth";
+import type { FormState } from "@/types/form";
 
 interface LoginFormProps {
 	action: (payload: FormData) => void;
@@ -45,13 +46,23 @@ export function LoginForm({ action, pending, state }: LoginFormProps) {
 				</div>
 
 				{/* パスワード入力 */}
-				<PasswordInput
-					id="password"
-					name="password"
-					autoComplete="current-password"
-					required
-					error={state?.errors?.password?.[0]}
-				/>
+				<div className="space-y-2">
+					<PasswordInput
+						id="password"
+						name="password"
+						autoComplete="current-password"
+						required
+						error={state?.errors?.password?.[0]}
+					/>
+					<div className="flex justify-end">
+						<Link
+							href="/forgot-password"
+							className="text-xs font-medium text-[#8c9fc2]/60 hover:text-violet-400 transition-colors duration-200 cursor-pointer"
+						>
+							パスワードをお忘れですか？
+						</Link>
+					</div>
+				</div>
 			</div>
 
 			<div>
