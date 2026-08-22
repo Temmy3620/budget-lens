@@ -50,6 +50,7 @@ export async function updateSession(request: NextRequest) {
 	const isAuthApi =
 		request.nextUrl.pathname.startsWith("/api/auth") ||
 		request.nextUrl.pathname.startsWith("/auth");
+	const isOnboardingPage = request.nextUrl.pathname.startsWith("/onboarding");
 
 	// 未ログイン時にログイン画面、ルート(LP)、パスワード忘れた/リセット画面、認証関連以外のページにアクセスした場合
 	if (
@@ -72,11 +73,43 @@ export async function updateSession(request: NextRequest) {
 		return NextResponse.redirect(url);
 	}
 
-	// ログイン済みのユーザーがログイン画面にアクセスした場合、ダッシュボードへ転送
+	// ログイン済みのユーザーがログイン画面にアクセスした場合、かつオンボーディング完了済みならダッシュボードへ転送
+	// (未完了のユーザーはログアウトや再ログインを可能にするため、ログイン画面の表示を許可する)
 	if (user && isLoginPage) {
-		const url = request.nextUrl.clone();
-		url.pathname = "/dashboard";
-		return NextResponse.redirect(url);
+		const isOnboarded = user.user_metadata?.onboarded === true;
+		if (isOnboarded) {
+			const url = request.nextUrl.clone();
+			url.pathname = "/dashboard";
+			return NextResponse.redirect(url);
+		}
+	}
+
+	// オンボーディング状況に応じたリダイレクト制御
+	if (user) {
+		const isOnboarded = user.user_metadata?.onboarded === true;
+
+		if (!isOnboarded) {
+			// 未オンボーディングで、オンボーディング画面以外かつその他の公開ページ以外にアクセスした場合
+			if (
+				!isOnboardingPage &&
+				!isLoginPage &&
+				!isRootPage &&
+				!isForgotPasswordPage &&
+				!isResetPasswordPage &&
+				!isAuthApi
+			) {
+				const url = request.nextUrl.clone();
+				url.pathname = "/onboarding";
+				return NextResponse.redirect(url);
+			}
+		} else {
+			// オンボーディング完了済みなのにオンボーディング画面にアクセスした場合
+			if (isOnboardingPage) {
+				const url = request.nextUrl.clone();
+				url.pathname = "/dashboard";
+				return NextResponse.redirect(url);
+			}
+		}
 	}
 
 	return supabaseResponse;

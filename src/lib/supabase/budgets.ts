@@ -157,3 +157,42 @@ export async function deleteBudget(
 		return { success: false, error: "予期しないエラーが発生しました。" };
 	}
 }
+
+/**
+ * 複数の予算設定を一括で追加する
+ * @param userId ログインユーザーのID
+ * @param budgetsData 予算設定データの配列
+ * @param client Supabaseクライアント（オプション）
+ */
+export async function addBudgets(
+	userId: string,
+	budgetsData: Omit<BudgetSetting, "id">[],
+	client?: SupabaseClient,
+): Promise<BudgetSetting[]> {
+	const supabase = client ?? createClient();
+	const { data, error } = await supabase
+		.from("budgets")
+		.insert(
+			budgetsData.map((b) => ({
+				user_id: userId,
+				name: b.name,
+				budget: b.budget,
+				color: b.color,
+				memo: b.memo || null,
+			})),
+		)
+		.select();
+
+	if (error) {
+		console.error("Failed to add budgets bulk to Supabase:", error);
+		throw error;
+	}
+
+	return (data || []).map((budget) => ({
+		id: budget.id,
+		name: budget.name,
+		budget: budget.budget,
+		color: budget.color,
+		memo: budget.memo || undefined,
+	}));
+}
