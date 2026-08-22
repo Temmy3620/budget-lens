@@ -18,13 +18,15 @@ interface LoginClientProps {
 		state: FormState<SignupFormErrors>,
 		formData: FormData,
 	) => Promise<FormState<SignupFormErrors>>;
+	initialMode?: "login" | "signup";
 }
 
 export default function LoginClient({
 	loginAction,
 	signupAction,
+	initialMode = "login",
 }: LoginClientProps) {
-	const [mode, setMode] = useState<"login" | "signup">("login");
+	const [mode, setMode] = useState<"login" | "signup">(initialMode);
 	const [loginState, runLogin, loginPending] = useActionState(
 		loginAction,
 		undefined,
@@ -77,8 +79,8 @@ export default function LoginClient({
 							type="button"
 							onClick={() => setMode("login")}
 							className={`flex-1 pb-4 border-b-2 tracking-wider font-semibold transition-colors duration-200 cursor-pointer ${isLogin
-									? "border-violet-500 text-white"
-									: "border-transparent text-slate-500 hover:text-slate-300"
+								? "border-violet-500 text-white"
+								: "border-transparent text-slate-500 hover:text-slate-300"
 								}`}
 						>
 							ログイン
@@ -87,8 +89,8 @@ export default function LoginClient({
 							type="button"
 							onClick={() => setMode("signup")}
 							className={`flex-1 pb-4 border-b-2 tracking-wider font-semibold transition-colors duration-200 cursor-pointer ${!isLogin
-									? "border-violet-500 text-white"
-									: "border-transparent text-slate-500 hover:text-slate-300"
+								? "border-violet-500 text-white"
+								: "border-transparent text-slate-500 hover:text-slate-300"
 								}`}
 						>
 							会員登録

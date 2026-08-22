@@ -9,7 +9,11 @@ export const metadata = {
 		"ログインまたは新規会員登録を行い、予算と出費の管理を始めましょう。",
 };
 
-export default async function LoginPage() {
+interface PageProps {
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function LoginPage({ searchParams }: PageProps) {
 	const supabase = await createClient();
 	const {
 		data: { user },
@@ -20,6 +24,15 @@ export default async function LoginPage() {
 		redirect("/");
 	}
 
-	return <LoginClient loginAction={login} signupAction={signup} />;
+	const resolvedSearchParams = await searchParams;
+	const initialMode = resolvedSearchParams.mode === "signup" ? "signup" : "login";
+
+	return (
+		<LoginClient
+			loginAction={login}
+			signupAction={signup}
+			initialMode={initialMode}
+		/>
+	);
 }
 

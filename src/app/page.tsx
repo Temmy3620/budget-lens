@@ -9,7 +9,6 @@ import {
 	History,
 	Lock,
 	Mail,
-	Play,
 	Shield,
 	Sparkles,
 } from "lucide-react";
@@ -65,7 +64,7 @@ export default async function LandingPage() {
 							ログイン
 						</Link>
 						<Link
-							href="/login"
+							href="/login?mode=signup"
 							className="relative inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-semibold text-white overflow-hidden bg-gradient-to-r from-violet-600 to-indigo-600 shadow-[0_0_20px_rgba(99,102,241,0.25)] hover:shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all duration-300 cursor-pointer"
 						>
 							無料で始める
@@ -96,18 +95,11 @@ export default async function LandingPage() {
 
 						<div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
 							<Link
-								href="/login"
-								className="w-full sm:w-auto relative group flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-[#00d2ff] to-[#0066ff] px-8 py-4 text-base font-semibold text-white shadow-[0_0_30px_rgba(0,210,255,0.3)] hover:from-[#00e1ff] hover:to-[#0077ff] transition-all duration-300 cursor-pointer"
-							>
-								<Play className="h-4.5 w-4.5 fill-current text-white" />
-								Googleアカウントで始める
-							</Link>
-							<Link
-								href="/login"
+								href="/login?mode=signup"
 								className="w-full sm:w-auto flex items-center justify-center gap-2.5 rounded-xl border border-slate-700 bg-slate-900/60 backdrop-blur-md px-8 py-4 text-base font-semibold text-slate-300 hover:text-white hover:border-slate-500 hover:bg-slate-800/80 transition-all duration-200 cursor-pointer"
 							>
 								<Mail className="h-4.5 w-4.5" />
-								メールアドレスで無料登録
+								メールアドレスで無料で始める
 							</Link>
 						</div>
 					</div>
@@ -440,7 +432,7 @@ export default async function LandingPage() {
 									</ul>
 
 									<Link
-										href="/login"
+										href="/login?mode=signup"
 										className="flex w-full justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-3.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:from-violet-500 hover:to-indigo-500 transition-all duration-200 text-center cursor-pointer"
 									>
 										今すぐ無料で始める
@@ -465,7 +457,7 @@ export default async function LandingPage() {
 						</p>
 						<div className="pt-4">
 							<Link
-								href="/login"
+								href="/login?mode=signup"
 								className="inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-[#00d2ff] to-[#0066ff] px-10 py-5 text-lg font-bold text-white shadow-[0_0_30px_rgba(0,210,255,0.4)] hover:from-[#00e1ff] hover:to-[#0077ff] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
 							>
 								無料で今すぐ体験する
