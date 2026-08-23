@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 interface PasswordInputProps
 	extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -40,8 +40,9 @@ export function PasswordInput({
 				/>
 				<button
 					type="button"
+					disabled={props.disabled}
 					onClick={() => setShowPassword(!showPassword)}
-					className="absolute right-3 top-1/2 -translate-y-1/2 z-20 text-slate-400 hover:text-white transition-colors duration-150 cursor-pointer flex items-center justify-center p-1"
+					className="absolute right-3 top-1/2 -translate-y-1/2 z-20 text-slate-400 hover:text-white transition-colors duration-150 cursor-pointer flex items-center justify-center p-1 disabled:opacity-50 disabled:cursor-not-allowed"
 					aria-label={
 						showPassword ? "パスワードを非表示にする" : "パスワードを表示する"
 					}

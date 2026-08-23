@@ -35,7 +35,8 @@ export function LoginForm({ action, pending, state }: LoginFormProps) {
 						type="email"
 						autoComplete="email"
 						required
-						className="relative block w-full rounded-lg border border-[#31395c] bg-gradient-to-r from-[#131835] to-[#1a183d] px-4 py-3 text-white placeholder-slate-600 focus:z-10 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 sm:text-sm transition-colors duration-200"
+						disabled={pending}
+						className="relative block w-full rounded-lg border border-[#31395c] bg-gradient-to-r from-[#131835] to-[#1a183d] px-4 py-3 text-white placeholder-slate-600 focus:z-10 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 sm:text-sm transition-colors duration-200 disabled:opacity-50"
 						placeholder="入力"
 					/>
 					{state?.errors?.email && (
@@ -52,6 +53,7 @@ export function LoginForm({ action, pending, state }: LoginFormProps) {
 						name="password"
 						autoComplete="current-password"
 						required
+						disabled={pending}
 						error={state?.errors?.password?.[0]}
 					/>
 					<div className="flex justify-end">
