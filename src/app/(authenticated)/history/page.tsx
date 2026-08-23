@@ -1,3 +1,4 @@
+import { use } from "react";
 import HistoryClient from "@/components/history/history-client";
 import {
 	getAvailableYears,
@@ -9,13 +10,29 @@ export const metadata = {
 	description: "過去の月別予算と実際の支出を確認し、家計の振り返りを行います。",
 };
 
-export default async function HistoryPage() {
-	// 履歴データが存在する年の一覧を取得
-	const availableYears = await getAvailableYears();
-	const defaultYear = availableYears[0] || new Date().getFullYear();
+type YearsType = Awaited<ReturnType<typeof getAvailableYears>>;
+type HistoryListType = Awaited<ReturnType<typeof getYearlyHistoryList>>;
 
-	// 初期表示する年（最新の年）の履歴データを取得
-	const initialHistoryList = await getYearlyHistoryList(defaultYear);
+export default function HistoryPage() {
+	const dataPromise = getAvailableYears().then(async (availableYears) => {
+		const defaultYear = availableYears[0] || new Date().getFullYear();
+		const initialHistoryList = await getYearlyHistoryList(defaultYear);
+		return { availableYears, initialHistoryList, defaultYear };
+	});
+
+	return <HistoryPageWrapper dataPromise={dataPromise} />;
+}
+
+function HistoryPageWrapper({
+	dataPromise,
+}: {
+	dataPromise: Promise<{
+		availableYears: YearsType;
+		initialHistoryList: HistoryListType;
+		defaultYear: number;
+	}>;
+}) {
+	const { availableYears, initialHistoryList, defaultYear } = use(dataPromise);
 
 	return (
 		<HistoryClient

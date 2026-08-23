@@ -1,3 +1,4 @@
+import { use } from "react";
 import HistoryDetailClient from "@/components/history/history-detail/history-detail-client";
 import { getHistoryData } from "@/lib/supabase/history";
 
@@ -16,14 +17,29 @@ export async function generateMetadata({ params }: HistoryDetailParams) {
 	};
 }
 
-export default async function HistoryDetailPage({
-	params,
-}: HistoryDetailParams) {
-	const { year, month } = await params;
-	const yearNum = Number.parseInt(year, 10);
-	const monthNum = Number.parseInt(month, 10);
+type HistoryDataType = Awaited<ReturnType<typeof getHistoryData>>;
 
-	const historyData = await getHistoryData(yearNum, monthNum);
+export default function HistoryDetailPage({ params }: HistoryDetailParams) {
+	const dataPromise = params.then(async ({ year, month }) => {
+		const yearNum = Number.parseInt(year, 10);
+		const monthNum = Number.parseInt(month, 10);
+		const historyData = await getHistoryData(yearNum, monthNum);
+		return { yearNum, monthNum, historyData };
+	});
+
+	return <HistoryDetailWrapper dataPromise={dataPromise} />;
+}
+
+function HistoryDetailWrapper({
+	dataPromise,
+}: {
+	dataPromise: Promise<{
+		yearNum: number;
+		monthNum: number;
+		historyData: HistoryDataType;
+	}>;
+}) {
+	const { yearNum, monthNum, historyData } = use(dataPromise);
 
 	return (
 		<HistoryDetailClient

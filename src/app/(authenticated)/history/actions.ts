@@ -1,7 +1,7 @@
 "use server";
 
-import { getYearlyHistoryList } from "@/lib/supabase/history";
 import type { MonthlyHistorySummary } from "@/components/history/types";
+import { getYearlyHistoryList } from "@/lib/supabase/history";
 
 /**
  * 指定された年の履歴データを取得する Server Action
