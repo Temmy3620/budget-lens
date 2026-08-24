@@ -1,7 +1,3 @@
-import Link from "next/link";
-import Image from "next/image";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import {
 	BarChart3,
 	CalendarDays,
@@ -12,6 +8,10 @@ import {
 	Shield,
 	Sparkles,
 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
 	title: "Budget Lens | 予算の「やりくり」だけに焦点をあてる、新しい家計簿",
@@ -230,7 +230,7 @@ export default async function LandingPage() {
 							</h3>
 							<p className="text-slate-300 text-sm leading-relaxed">
 								Budget
-								Lensは、日常的に削ったり増やしたりコントロールできる「やりくり費」だけの記録に特化。家賃や保険は除外し、今月の生活費だけで暮らす心地よさを提供します。余分な機能を削ぎ落としたからこそ、続けられます。
+								Lensは、日常的に削ったり増やしたりコントロールできる「やりくり費」だけの記録に特化。家賃や保険は除外し、今月の生活費だけで暮らす心地よさを提供します。自分で決めた予算の範囲内で「使いたい欲」を管理し、自然と欲望を抑制する習慣が身につきます。余分な機能を削ぎ落としたからこそ、続けられます。
 							</p>
 						</div>
 					</div>
