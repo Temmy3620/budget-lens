@@ -1,6 +1,7 @@
 import type { FormState } from "@/types/form";
 import type { SignupFormErrors } from "@/types/auth";
 import { PasswordInput } from "@/components/ui/password-input";
+import { motion } from "motion/react";
 
 interface SignupFormProps {
 	action: (payload: FormData) => void;
@@ -8,20 +9,67 @@ interface SignupFormProps {
 	state: FormState<SignupFormErrors>;
 }
 
+const formVariants = {
+	hidden: { opacity: 0 },
+	visible: {
+		opacity: 1,
+		transition: {
+			staggerChildren: 0.08,
+		},
+	},
+};
+
+const itemVariants = {
+	hidden: { opacity: 0, y: 12 },
+	visible: {
+		opacity: 1,
+		y: 0,
+		transition: {
+			duration: 0.4,
+			ease: [0.16, 1, 0.3, 1] as const,
+		},
+	},
+};
+
+const shakeVariants = {
+	hidden: { opacity: 0, y: -10 },
+	visible: {
+		opacity: 1,
+		y: 0,
+		x: [0, -10, 10, -10, 10, -5, 5, 0],
+		transition: {
+			duration: 0.5,
+			opacity: { duration: 0.2 },
+			y: { duration: 0.2 },
+		},
+	},
+};
+
 export function SignupForm({ action, pending, state }: SignupFormProps) {
 	return (
-		<form action={action} className="space-y-6">
+		<motion.form
+			action={action}
+			className="space-y-6"
+			variants={formVariants}
+			initial="hidden"
+			animate="visible"
+		>
 			{state?.errors?._form && (
-				<div className="rounded-lg border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-400">
+				<motion.div
+					className="rounded-lg border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-400"
+					variants={shakeVariants}
+					initial="hidden"
+					animate="visible"
+				>
 					{state.errors._form.map((err) => (
 						<p key={err}>{err}</p>
 					))}
-				</div>
+				</motion.div>
 			)}
 
 			<div className="space-y-5">
 				{/* 名前入力 */}
-				<div>
+				<motion.div variants={itemVariants}>
 					<label
 						htmlFor="name"
 						className="block text-xs font-semibold text-[#8c9fc2] mb-2 tracking-wide"
@@ -33,18 +81,23 @@ export function SignupForm({ action, pending, state }: SignupFormProps) {
 						name="name"
 						type="text"
 						required
+						disabled={pending}
 						className="relative block w-full rounded-lg border border-[#31395c] bg-gradient-to-r from-[#131835] to-[#1a183d] px-4 py-3 text-white placeholder-slate-600 focus:z-10 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 sm:text-sm transition-colors duration-200"
 						placeholder="入力"
 					/>
 					{state?.errors?.name && (
-						<p className="mt-1.5 text-xs text-rose-400">
+						<motion.p
+							className="mt-1.5 text-xs text-rose-400"
+							initial={{ opacity: 0, y: -4 }}
+							animate={{ opacity: 1, y: 0 }}
+						>
 							{state.errors.name[0]}
-						</p>
+						</motion.p>
 					)}
-				</div>
+				</motion.div>
 
 				{/* メールアドレス入力 */}
-				<div>
+				<motion.div variants={itemVariants}>
 					<label
 						htmlFor="email-address"
 						className="block text-xs font-semibold text-[#8c9fc2] mb-2 tracking-wide"
@@ -57,31 +110,41 @@ export function SignupForm({ action, pending, state }: SignupFormProps) {
 						type="email"
 						autoComplete="email"
 						required
+						disabled={pending}
 						className="relative block w-full rounded-lg border border-[#31395c] bg-gradient-to-r from-[#131835] to-[#1a183d] px-4 py-3 text-white placeholder-slate-600 focus:z-10 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 sm:text-sm transition-colors duration-200"
 						placeholder="入力"
 					/>
 					{state?.errors?.email && (
-						<p className="mt-1.5 text-xs text-rose-400">
+						<motion.p
+							className="mt-1.5 text-xs text-rose-400"
+							initial={{ opacity: 0, y: -4 }}
+							animate={{ opacity: 1, y: 0 }}
+						>
 							{state.errors.email[0]}
-						</p>
+						</motion.p>
 					)}
-				</div>
+				</motion.div>
 
 				{/* パスワード入力 */}
-				<PasswordInput
-					id="password"
-					name="password"
-					autoComplete="new-password"
-					required
-					error={state?.errors?.password?.[0]}
-				/>
+				<motion.div variants={itemVariants}>
+					<PasswordInput
+						id="password"
+						name="password"
+						autoComplete="new-password"
+						required
+						disabled={pending}
+						error={state?.errors?.password?.[0]}
+					/>
+				</motion.div>
 			</div>
 
-			<div>
-				<button
+			<motion.div variants={itemVariants}>
+				<motion.button
 					type="submit"
 					disabled={pending}
 					className="group relative flex w-full justify-center rounded-lg bg-gradient-to-r from-[#00d2ff] to-[#0066ff] px-4 py-3 text-sm font-semibold text-white shadow-[0_0_20px_rgba(0,210,255,0.35)] hover:from-[#00e1ff] hover:to-[#0077ff] focus:outline-none focus:ring-2 focus:ring-[#00d2ff] focus:ring-offset-2 focus:ring-offset-[#030616] disabled:opacity-50 transition-all duration-200 cursor-pointer"
+					whileHover={{ scale: 1.02 }}
+					whileTap={{ scale: 0.98 }}
 				>
 					{pending ? (
 						<span className="flex items-center gap-2">
@@ -110,8 +173,8 @@ export function SignupForm({ action, pending, state }: SignupFormProps) {
 					) : (
 						"登録する"
 					)}
-				</button>
-			</div>
-		</form>
+				</motion.button>
+			</motion.div>
+		</motion.form>
 	);
 }

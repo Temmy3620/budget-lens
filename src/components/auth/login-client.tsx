@@ -8,6 +8,7 @@ import { KeyVisual } from "@/components/auth/key-visual";
 import { SuccessMessage } from "@/components/auth/success-message";
 import { LoginForm } from "@/components/auth/login-form";
 import { SignupForm } from "@/components/auth/signup-form";
+import { motion, AnimatePresence } from "motion/react";
 
 interface LoginClientProps {
 	loginAction: (
@@ -47,7 +48,12 @@ export default function LoginClient({
 			<KeyVisual />
 
 			{/* ================= 右カラム: ログインフォームエリア ================= */}
-			<div className="w-full md:w-[460px] lg:w-[500px] flex flex-col justify-center px-8 py-16 md:px-12 bg-[#0a0f24]/30 backdrop-blur-xl relative">
+			<motion.div
+				className="w-full md:w-[460px] lg:w-[500px] flex flex-col justify-center px-8 py-16 md:px-12 bg-[#0a0f24]/30 backdrop-blur-xl relative"
+				initial={{ opacity: 0, scale: 0.96 }}
+				animate={{ opacity: 1, scale: 1 }}
+				transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+			>
 				{/* LPへ戻るリンク */}
 				<Link
 					href="/"
@@ -99,26 +105,36 @@ export default function LoginClient({
 						</button>
 					</div>
 
-					{!isLogin && signupState?.success && signupState?.message ? (
-						<SuccessMessage
-							message={signupState.message}
-							onBackToLogin={() => setMode("login")}
-						/>
-					) : isLogin ? (
-						<LoginForm
-							action={runLogin}
-							pending={loginPending}
-							state={loginState}
-						/>
-					) : (
-						<SignupForm
-							action={runSignup}
-							pending={signupPending}
-							state={signupState}
-						/>
-					)}
+					<AnimatePresence mode="wait">
+						<motion.div
+							key={mode + (signupState?.success ? "-success" : "")}
+							initial={{ opacity: 0, y: 8 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: -8 }}
+							transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+						>
+							{!isLogin && signupState?.success && signupState?.message ? (
+								<SuccessMessage
+									message={signupState.message}
+									onBackToLogin={() => setMode("login")}
+								/>
+							) : isLogin ? (
+								<LoginForm
+									action={runLogin}
+									pending={loginPending}
+									state={loginState}
+								/>
+							) : (
+								<SignupForm
+									action={runSignup}
+									pending={signupPending}
+									state={signupState}
+								/>
+							)}
+						</motion.div>
+					</AnimatePresence>
 				</div>
-			</div>
+			</motion.div>
 		</div>
 	);
 }
