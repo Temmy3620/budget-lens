@@ -6,11 +6,11 @@ set -euo pipefail
 # ==============================================================================
 # 設定項目（プロジェクトに合わせて書き換えてください）
 # ==============================================================================
-PROJECT_ID="YOUR_GCP_PROJECT_ID"        # 例: my-budget-lens-project
-SERVICE_NAME="budget-lens"              # Cloud Run のサービス名
+PROJECT_ID="YOUR_GCP_PROJECT_ID"        # 例: my-yarikuru-project
+SERVICE_NAME="yarikuru"                 # Cloud Run のサービス名
 REGION="asia-northeast1"                # デプロイ先リージョン (東京: asia-northeast1)
-REPO_NAME="budget-lens-repo"            # Artifact Registry のリポジトリ名
-IMAGE_NAME="budget-lens"                # コンテナイメージ名
+REPO_NAME="yarikuru-repo"               # Artifact Registry のリポジトリ名
+IMAGE_NAME="yarikuru"                   # コンテナイメージ名
 PORT=8080                               # Cloud Run ポート
 
 # 最低必要空き容量(GB)（ビルド失敗を防ぐための安全ライン）
@@ -27,7 +27,7 @@ LATEST_URI="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:la
 # 1. Next.js ビルド時 (ブラウザ用公開環境変数)
 NEXT_PUBLIC_SUPABASE_URL="https://xxxxxxxxxxxx.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOi..."
-NEXT_PUBLIC_APP_URL="https://budget-lens-xxxxxxxxxx-an.a.run.app" # 独自ドメインまたは Cloud Run URL
+NEXT_PUBLIC_APP_URL="https://yarikuru-xxxxxxxxxx-an.a.run.app" # 独自ドメインまたは Cloud Run URL
 
 # 2. サーバー実行時 (非公開・シークレット)
 SUPABASE_SERVICE_ROLE_KEY="eyJhbGciOi..."

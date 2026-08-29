@@ -13,16 +13,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Budget Lens",
+	title: "YariKuru",
 	description: "予算の管理と可視化を行う Next.js アプリケーション",
 	icons: {
-		icon: "/icon_v4.png",
-		apple: "/icon_v4.png",
+		icon: "/icon_v6.png",
+		apple: "/icon_v6.png",
 	},
 	appleWebApp: {
 		capable: true,
 		statusBarStyle: "black",
-		title: "Budget Lens",
+		title: "YariKuru",
 	},
 };
 

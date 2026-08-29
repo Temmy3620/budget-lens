@@ -49,22 +49,27 @@ export default function Header({
 					</svg>
 				</button>
 
-				<div className="flex items-center gap-2 select-none">
+				<div className="flex items-center gap-2.5 select-none">
 					<Image
-						src="/icon_v4.png"
-						alt="Budget Lens Logo"
-						width={100}
-						height={100}
-						className="w-6 h-6 object-contain"
+						src="/icon_v6.png"
+						alt="YariKuru Logo"
+						width={40}
+						height={40}
+						className="w-10 h-10 object-contain"
 					/>
-					<span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent tracking-wide">
-						Budget Lens
-					</span>
+					<Image
+						src="/title_v2.png"
+						alt="YariKuru"
+						width={120}
+						height={28}
+						className="h-7 w-auto object-contain"
+						priority
+					/>
 				</div>
 			</div>
 
 			<div className="flex items-center gap-4">
-				<span className="text-sm font-semibold bg-gradient-to-r from-[#ffe8bd] to-[#ffd280] bg-clip-text text-transparent truncate max-w-[180px]">
+				<span className="text-sm font-semibold bg-gradient-to-r from-[#00d2ff] via-[#3b82f6] to-[#a855f7] bg-clip-text text-transparent truncate max-w-[180px]">
 					{userName || userEmail}
 				</span>
 			</div>

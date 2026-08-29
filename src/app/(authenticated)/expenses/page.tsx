@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/supabase/dal";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
-	title: "支出管理 - Budget Lens",
+	title: "支出管理 - YariKuru",
 	description:
 		"日々の出費を記録し、設定した予算カテゴリごとの残り予算をチェックします。",
 };

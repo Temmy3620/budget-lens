@@ -12,7 +12,7 @@ interface HistoryDetailParams {
 export async function generateMetadata({ params }: HistoryDetailParams) {
 	const { year, month } = await params;
 	return {
-		title: `${year}年${month}月の振り返り - Budget Lens`,
+		title: `${year}年${month}月の振り返り - YariKuru`,
 		description: `${year}年${month}月の予算設定に対する消化状況と出費明細を分析します。`,
 	};
 }

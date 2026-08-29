@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { resetPassword } from "./actions";
 
 export const metadata = {
-	title: "パスワードの更新 - Budget Lens",
+	title: "パスワードの更新 - YariKuru",
 	description: "新しいパスワードを設定します。",
 };
 

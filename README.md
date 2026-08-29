@@ -1,4 +1,4 @@
-# Budget Lens
+# YariKuru
 
 予算の管理と可視化を行う Next.js アプリケーションです。
 

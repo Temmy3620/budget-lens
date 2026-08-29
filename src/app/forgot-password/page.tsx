@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { sendResetEmail } from "./actions";
 
 export const metadata = {
-	title: "パスワード再設定 - Budget Lens",
+	title: "パスワード再設定 - YariKuru",
 	description: "パスワードを忘れた場合の再設定手続きを行います。",
 };
 

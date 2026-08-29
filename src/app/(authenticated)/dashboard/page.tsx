@@ -5,7 +5,7 @@ import { getExpenses } from "@/lib/supabase/expenses";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
-	title: "ダッシュボード - Budget Lens",
+	title: "ダッシュボード - YariKuru",
 	description:
 		"今月の残り予算や最近の支出履歴、カテゴリ別支出割合を確認できます。",
 };

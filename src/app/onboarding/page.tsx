@@ -230,7 +230,7 @@ export default function OnboardingPage() {
 						<Wallet className="w-7 h-7 text-white" />
 					</div>
 					<h1 className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
-						Budget Lens
+						YariKuru
 					</h1>
 					<p className="text-xs md:text-sm text-slate-400 mt-1">
 						スマートな予算管理で、暮らしをシンプルに

@@ -6,8 +6,8 @@ export function KeyVisual() {
 			{/* キービジュアル画像を中央に少し小さく、額縁のように浮かせて配置 */}
 			<div className="relative w-full max-h-full aspect-[4/3] overflow-hidden">
 				<Image
-					src="/keyvisual_v3.png"
-					alt="Budget Lens Key Visual"
+					src="/keyvisual_v4.png"
+					alt="YariKuru Key Visual"
 					fill
 					priority
 					sizes="(max-width: 768px) 100vw, 50vw"

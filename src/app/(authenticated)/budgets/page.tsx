@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/lib/supabase/dal";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
-	title: "予算設定 - Budget Lens",
+	title: "予算設定 - YariKuru",
 	description:
 		"管理したいカテゴリを自由に入力して追加し、それぞれの月間予算を設定します。",
 };

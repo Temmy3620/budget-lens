@@ -1,4 +1,4 @@
-# Budget Lens - Gemini / Antigravity 開発ガイド
+# YariKuru - Gemini / Antigravity 開発ガイド
 
 このファイルは、本プロジェクトで作業する Gemini および Antigravity エージェント向けの開発手順、ディレクトリ構造、業務仕様、実装ルールをまとめたものです。
 

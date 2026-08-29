@@ -76,7 +76,7 @@ export default function Sidebar({
 					}`}
 				>
 					<div className="flex items-center justify-between mb-8">
-						<span className="text-xl font-bold bg-gradient-to-r from-[#ffe8bd] to-[#ffd280] bg-clip-text text-transparent">
+						<span className="text-xl font-bold bg-gradient-to-r from-[#00d2ff] via-[#3b82f6] to-[#a855f7] bg-clip-text text-transparent">
 							Menu
 						</span>
 						<button
@@ -133,7 +133,7 @@ export default function Sidebar({
 								ログイン中
 							</span>
 							{userName && (
-								<span className="text-sm font-semibold bg-gradient-to-r from-[#ffe8bd] to-[#ffd280] bg-clip-text text-transparent truncate">
+								<span className="text-sm font-semibold bg-gradient-to-r from-[#00d2ff] via-[#3b82f6] to-[#a855f7] bg-clip-text text-transparent truncate">
 									{userName}
 								</span>
 							)}

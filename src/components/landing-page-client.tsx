@@ -82,17 +82,22 @@ export default function LandingPageClient() {
 			{/* ================= ヘッダー ================= */}
 			<header className="sticky top-0 z-50 backdrop-blur-md border-b border-white/5 bg-[#0a0f24]/50 transition-all duration-300">
 				<div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-					<div className="flex items-center gap-3">
+					<div className="flex items-center gap-2.5">
 						<Image
-							src="/icon_v4.png"
-							alt="Budget Lens Logo"
-							width={24}
-							height={24}
-							className="w-6 h-6 object-contain"
+							src="/icon_v6.png"
+							alt="YariKuru Logo"
+							width={40}
+							height={40}
+							className="w-10 h-10 object-contain"
 						/>
-						<span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-indigo-400 bg-clip-text text-transparent tracking-wide">
-							Budget Lens
-						</span>
+						<Image
+							src="/title_v2.png"
+							alt="YariKuru"
+							width={120}
+							height={28}
+							className="h-7 w-auto object-contain"
+							priority
+						/>
 					</div>
 
 					<nav className="flex items-center gap-6">
@@ -149,8 +154,7 @@ export default function LandingPageClient() {
 							className="text-slate-400 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium"
 							variants={itemVariants}
 						>
-							面倒な銀行連携や税金の計算は不要。自分でコントロールできる予算枠（やりくり予算）を決め、その中での出費・支出を管理する予算管理アプリ「Budget
-							Lens」。
+							面倒な銀行連携や税金の計算は不要。自分でコントロールできる予算枠（やりくり予算）を決め、その中での出費・支出を管理する予算管理アプリ「YariKuru（ヤリクル）」。
 						</motion.p>
 
 						<motion.div
@@ -299,7 +303,7 @@ export default function LandingPageClient() {
 							variants={fadeInScrollVariants}
 						>
 							<h2 className="text-xs font-bold tracking-widest text-[#00d2ff] uppercase">
-								Why Budget Lens?
+								Why YariKuru?
 							</h2>
 							<p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-snug">
 								「家計簿アプリの登録・連携、細かすぎて疲れていませんか？」
@@ -361,8 +365,7 @@ export default function LandingPageClient() {
 								引き算の答え：日々の「やりくり予算」だけに集中する
 							</h3>
 							<p className="text-slate-300 text-sm leading-relaxed">
-								Budget
-								Lensは、日常的に削ったり増やしたりコントロールできる「やりくり費」だけの記録に特化。家賃や保険は除外し、今月の生活費だけで暮らす心地よさを提供します。自分で決めた予算の範囲内で「使いたい欲」を管理し、自然と欲望を抑制する習慣が身につきます。余分な機能を削ぎ落としたからこそ、続けられます。
+								YariKuruは、日常的に削ったり増やしたりコントロールできる「やりくり費」だけの記録に特化。家賃や保険は除外し、今月の生活費だけで暮らす心地よさを提供します。自分で決めた予算の範囲内で「使いたい欲」を管理し、自然と欲望を抑制する習慣が身につきます。余分な機能を削ぎ落としたからこそ、続けられます。
 							</p>
 						</motion.div>
 					</div>
@@ -557,8 +560,7 @@ export default function LandingPageClient() {
 							「あなたのデータは、あなただけのもの」
 						</h2>
 						<p className="text-slate-400 text-sm leading-relaxed">
-							Budget
-							Lensは、堅牢なクラウドインフラであるデータベース「Supabase」を採用。
+							YariKuruは、堅牢なクラウドインフラであるデータベース「Supabase」を採用。
 							強固な「行レベルセキュリティ（RLS）」の仕組みによって、登録された情報は本人以外のアクセスが完全に遮断され、暗号化されて隔離されます。外部の口座接続データを保管しないため、漏洩や乗っ取りのリスクも極小です。
 						</p>
 						<div className="flex items-center gap-3 text-xs text-slate-500 font-semibold">
@@ -690,7 +692,7 @@ export default function LandingPageClient() {
 							viewport={{ once: true }}
 							transition={{ duration: 0.8, ease: easeOutExpo }}
 						>
-							予算 of レンズ（Lens）を覗いて、
+							YariKuru で予算をコントロールして、
 							<br />
 							本当に大切なことにお金を使いましょう。
 						</motion.h2>
@@ -733,17 +735,21 @@ export default function LandingPageClient() {
 				<div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
 					<div className="flex items-center gap-2">
 						<Image
-							src="/icon_v4.png"
-							alt="Budget Lens Icon"
-							width={24}
-							height={24}
-							className="rounded-md shadow-[0_0_10px_rgba(124,58,237,0.2)]"
+							src="/icon_v6.png"
+							alt="YariKuru Icon"
+							width={28}
+							height={28}
+							className="w-7 h-7 rounded-md object-contain shadow-[0_0_10px_rgba(124,58,237,0.2)]"
 						/>
-						<span className="font-semibold text-slate-400 tracking-wider">
-							Budget Lens
-						</span>
+						<Image
+							src="/title_v2.png"
+							alt="YariKuru"
+							width={90}
+							height={20}
+							className="h-4.5 w-auto object-contain opacity-80"
+						/>
 					</div>
-					<div>© 2026 Budget Lens. All rights reserved.</div>
+					<div>© 2026 YariKuru. All rights reserved.</div>
 				</div>
 			</footer>
 		</div>

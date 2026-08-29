@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { login, signup } from "./actions";
 
 export const metadata = {
-	title: "ログイン - Budget Lens",
+	title: "ログイン - YariKuru",
 	description:
 		"ログインまたは新規会員登録を行い、予算と出費の管理を始めましょう。",
 };

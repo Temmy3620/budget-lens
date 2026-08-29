@@ -52,7 +52,7 @@ export default function DashboardClient({
 							おかえりなさい
 						</h1>
 						<p className="mt-2 text-slate-400 max-w-xl text-sm md:text-base leading-relaxed">
-							Budget Lens
+							YariKuru
 							はあなたの収支をリアルタイムで追跡し、スマートな予算管理をサポートします。今月の財務ステータスを確認しましょう。
 						</p>
 					</div>

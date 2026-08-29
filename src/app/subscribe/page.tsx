@@ -34,17 +34,22 @@ export default function SubscribePage() {
 			<div className="w-full max-w-lg space-y-8 relative z-10">
 				{/* ヘッダーロゴ */}
 				<div className="flex flex-col items-center text-center space-y-3">
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2.5">
 						<Image
-							src="/icon_v4.png"
-							alt="Budget Lens Icon"
-							width={36}
-							height={36}
-							className="rounded-xl shadow-[0_0_20px_rgba(124,58,237,0.3)]"
+							src="/icon_v6.png"
+							alt="YariKuru Icon"
+							width={44}
+							height={44}
+							className="w-11 h-11 rounded-xl object-contain shadow-[0_0_20px_rgba(124,58,237,0.3)]"
 						/>
-						<span className="text-2xl font-bold text-white tracking-wider">
-							Budget Lens
-						</span>
+						<Image
+							src="/title_v2.png"
+							alt="YariKuru"
+							width={130}
+							height={28}
+							className="h-7 w-auto object-contain"
+							priority
+						/>
 					</div>
 					<p className="text-xs text-violet-400 font-semibold tracking-widest uppercase">
 						Subscription Plan
@@ -62,7 +67,7 @@ export default function SubscribePage() {
 							やりくり管理を始めましょう
 						</h2>
 						<p className="text-slate-400 text-xs">
-							Budget Lens のすべての機能をご利用いただくためのプランです。
+							YariKuru のすべての機能をご利用いただくためのプランです。
 						</p>
 					</div>
 
