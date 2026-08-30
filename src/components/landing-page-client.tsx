@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
+import Footer from "./navigation/footer";
 
 // イージング定義 (Sleek out-expo)
 const easeOutExpo = [0.16, 1, 0.3, 1] as const;
@@ -731,27 +732,7 @@ export default function LandingPageClient() {
 			</main>
 
 			{/* ================= フッター ================= */}
-			<footer className="border-t border-white/5 bg-[#02040d] py-12 relative z-10 text-slate-500 text-xs">
-				<div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-					<div className="flex items-center gap-2">
-						<Image
-							src="/icon_v6.png"
-							alt="YariKuru Icon"
-							width={28}
-							height={28}
-							className="w-7 h-7 rounded-md object-contain shadow-[0_0_10px_rgba(124,58,237,0.2)]"
-						/>
-						<Image
-							src="/title_v2.png"
-							alt="YariKuru"
-							width={90}
-							height={20}
-							className="h-4.5 w-auto object-contain opacity-80"
-						/>
-					</div>
-					<div>© 2026 YariKuru. All rights reserved.</div>
-				</div>
-			</footer>
+			<Footer />
 		</div>
 	);
 }

@@ -56,8 +56,13 @@ export async function updateSession(request: NextRequest) {
 	);
 	const isOnboardingPage = request.nextUrl.pathname.startsWith("/onboarding");
 	const isSubscribePage = request.nextUrl.pathname.startsWith("/subscribe");
+	const isPublicInfoPage =
+		request.nextUrl.pathname.startsWith("/terms") ||
+		request.nextUrl.pathname.startsWith("/privacy") ||
+		request.nextUrl.pathname.startsWith("/legal") ||
+		request.nextUrl.pathname.startsWith("/contact");
 
-	// 未ログイン時にログイン画面、ルート(LP)、パスワード忘れた/リセット画面、認証関連以外のページにアクセスした場合
+	// 未ログイン時にログイン画面、ルート(LP)、パスワード忘れた/リセット画面、認証関連、公開情報ページ以外のページにアクセスした場合
 	if (
 		!user &&
 		!isLoginPage &&
@@ -65,7 +70,8 @@ export async function updateSession(request: NextRequest) {
 		!isForgotPasswordPage &&
 		!isResetPasswordPage &&
 		!isAuthApi &&
-		!isWebhookApi
+		!isWebhookApi &&
+		!isPublicInfoPage
 	) {
 		// APIリクエストの場合はリダイレクトせず、401エラーのJSONを返す
 		if (isApi) {
@@ -110,7 +116,8 @@ export async function updateSession(request: NextRequest) {
 				!isForgotPasswordPage &&
 				!isResetPasswordPage &&
 				!isApi &&
-				!isAuthApi
+				!isAuthApi &&
+				!isPublicInfoPage
 			) {
 				const url = request.nextUrl.clone();
 				url.pathname = "/subscribe";
@@ -134,7 +141,8 @@ export async function updateSession(request: NextRequest) {
 					!isForgotPasswordPage &&
 					!isResetPasswordPage &&
 					!isApi &&
-					!isAuthApi
+					!isAuthApi &&
+					!isPublicInfoPage
 				) {
 					const url = request.nextUrl.clone();
 					url.pathname = "/onboarding";
