@@ -5,7 +5,15 @@ import { BillingSettingsSection } from "./BillingSettingsSection";
 import { DataResetSection } from "./DataResetSection";
 import { AccountDeletionSection } from "./AccountDeletionSection";
 
-export default function SettingsClient() {
+interface SettingsClientProps {
+	subscriptionStatus: string;
+	trialEndsAt: string | null;
+}
+
+export default function SettingsClient({
+	subscriptionStatus,
+	trialEndsAt,
+}: SettingsClientProps) {
 	return (
 		<main className="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full space-y-6">
 			{/* ヘッダー */}
@@ -21,8 +29,11 @@ export default function SettingsClient() {
 				</div>
 			</div>
 
-			{/* お支払い・サブスクリプション管理セクション */}
-			<BillingSettingsSection />
+			{/* お支払い・プラン管理セクション */}
+			<BillingSettingsSection
+				subscriptionStatus={subscriptionStatus}
+				trialEndsAt={trialEndsAt}
+			/>
 
 			{/* データの初期化セクション */}
 			<DataResetSection />
