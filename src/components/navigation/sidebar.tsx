@@ -150,6 +150,38 @@ export default function Sidebar({
 								ログアウト
 							</button>
 						</form>
+
+						{/* 規約・問い合わせリンク */}
+						<div className="pt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] text-slate-500">
+							<Link
+								href="/terms"
+								onClick={() => setIsOpen(false)}
+								className="hover:text-slate-400 transition-colors"
+							>
+								利用規約
+							</Link>
+							<Link
+								href="/privacy"
+								onClick={() => setIsOpen(false)}
+								className="hover:text-slate-400 transition-colors"
+							>
+								プライバシー
+							</Link>
+							<Link
+								href="/legal"
+								onClick={() => setIsOpen(false)}
+								className="hover:text-slate-400 transition-colors"
+							>
+								特商法表記
+							</Link>
+							<Link
+								href="/contact"
+								onClick={() => setIsOpen(false)}
+								className="hover:text-slate-400 transition-colors"
+							>
+								お問い合わせ
+							</Link>
+						</div>
 					</div>
 				</aside>
 			</div>
