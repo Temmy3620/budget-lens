@@ -63,6 +63,7 @@ export default function BudgetsClient({
 		} catch (error) {
 			console.error("Failed to save budget:", error);
 			alert("予算の保存に失敗しました。");
+			throw error;
 		}
 	};
 

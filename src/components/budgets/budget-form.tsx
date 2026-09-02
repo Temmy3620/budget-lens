@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { COLOR_VARIANTS } from "./types";
 import type { BudgetSetting } from "./types";
 import {
@@ -13,7 +14,12 @@ import {
 
 interface BudgetFormProps {
 	editingSetting: BudgetSetting | null;
-	onSave: (name: string, budget: number, color: string, memo: string) => void;
+	onSave: (
+		name: string,
+		budget: number,
+		color: string,
+		memo: string,
+	) => Promise<void> | void;
 	onCancel: () => void;
 }
 
@@ -30,19 +36,37 @@ export function BudgetForm({
 		editingSetting?.color || COLOR_VARIANTS[0].value,
 	);
 	const [memo, setMemo] = useState(editingSetting?.memo || "");
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		const amount = Number.parseInt(budgetAmount, 10);
-		if (Number.isNaN(amount) || amount <= 0 || !categoryName.trim()) return;
+		if (
+			Number.isNaN(amount) ||
+			amount <= 0 ||
+			!categoryName.trim() ||
+			isSubmitting
+		) {
+			return;
+		}
 
-		onSave(categoryName.trim(), amount, color, memo.trim());
-		// 新規追加の場合はフォームをリセットする
-		if (!editingSetting) {
-			setCategoryName("");
-			setBudgetAmount("");
-			setColor(COLOR_VARIANTS[0].value);
-			setMemo("");
+		try {
+			setIsSubmitting(true);
+			await onSave(categoryName.trim(), amount, color, memo.trim());
+
+			alert(editingSetting ? "設定を保存しました" : "登録できました");
+
+			// 新規追加の場合はフォームをリセットする
+			if (!editingSetting) {
+				setCategoryName("");
+				setBudgetAmount("");
+				setColor(COLOR_VARIANTS[0].value);
+				setMemo("");
+			}
+		} catch (error) {
+			console.error("Submit error:", error);
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
@@ -61,10 +85,11 @@ export function BudgetForm({
 					<input
 						type="text"
 						required
+						disabled={isSubmitting}
 						placeholder="例: 食費、家賃、趣味、旅費など"
 						value={categoryName}
 						onChange={(e) => setCategoryName(e.target.value)}
-						className="w-full rounded-xl bg-slate-900 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-violet-500 transition-colors placeholder:text-slate-600"
+						className="w-full rounded-xl bg-slate-900 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-violet-500 transition-colors placeholder:text-slate-600 disabled:opacity-50"
 					/>
 				</div>
 
@@ -76,10 +101,11 @@ export function BudgetForm({
 					<input
 						type="number"
 						required
+						disabled={isSubmitting}
 						placeholder="例: 50000"
 						value={budgetAmount}
 						onChange={(e) => setBudgetAmount(e.target.value)}
-						className="w-full rounded-xl bg-slate-900 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-violet-500 transition-colors placeholder:text-slate-600"
+						className="w-full rounded-xl bg-slate-900 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-violet-500 transition-colors placeholder:text-slate-600 disabled:opacity-50"
 					/>
 				</div>
 
@@ -118,9 +144,10 @@ export function BudgetForm({
 					</span>
 					<textarea
 						placeholder="例: スーパー、外食、カフェ代など"
+						disabled={isSubmitting}
 						value={memo}
 						onChange={(e) => setMemo(e.target.value)}
-						className="w-full rounded-xl bg-slate-900 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-violet-500 transition-colors placeholder:text-slate-600 h-20 resize-none"
+						className="w-full rounded-xl bg-slate-900 border border-white/10 px-4 py-3 text-slate-200 text-sm focus:outline-none focus:border-violet-500 transition-colors placeholder:text-slate-600 h-20 resize-none disabled:opacity-50"
 					/>
 				</div>
 
@@ -129,17 +156,26 @@ export function BudgetForm({
 					{editingSetting && (
 						<button
 							type="button"
+							disabled={isSubmitting}
 							onClick={onCancel}
-							className="flex-1 rounded-xl bg-white/5 border border-white/10 py-3 text-sm font-semibold text-slate-300 hover:bg-white/10 transition-colors cursor-pointer"
+							className="flex-1 rounded-xl bg-white/5 border border-white/10 py-3 text-sm font-semibold text-slate-300 hover:bg-white/10 transition-colors cursor-pointer disabled:opacity-50"
 						>
 							キャンセル
 						</button>
 					)}
 					<button
 						type="submit"
-						className="flex-1 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 py-3 text-sm font-semibold text-white shadow-[0_0_15px_rgba(139,92,246,0.2)] hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all duration-300 cursor-pointer"
+						disabled={isSubmitting}
+						className="flex-1 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 py-3 text-sm font-semibold text-white shadow-[0_0_15px_rgba(139,92,246,0.2)] hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
 					>
-						{editingSetting ? "設定を保存" : "予算を設定する"}
+						{isSubmitting ? (
+							<>
+								<Loader2 className="w-4 h-4 animate-spin" />
+								<span>{editingSetting ? "保存中..." : "登録中..."}</span>
+							</>
+						) : (
+							<span>{editingSetting ? "設定を保存" : "予算を設定する"}</span>
+						)}
 					</button>
 				</div>
 			</form>
