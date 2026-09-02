@@ -54,8 +54,6 @@ export function BudgetForm({
 			setIsSubmitting(true);
 			await onSave(categoryName.trim(), amount, color, memo.trim());
 
-			alert(editingSetting ? "設定を保存しました" : "登録できました");
-
 			// 新規追加の場合はフォームをリセットする
 			if (!editingSetting) {
 				setCategoryName("");

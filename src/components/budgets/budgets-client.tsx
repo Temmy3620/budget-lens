@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { Loader2, CheckCircle2 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { CategoryList } from "@/components/budgets/category-list";
 import { BudgetForm } from "@/components/budgets/budget-form";
 import type { BudgetSetting } from "@/components/budgets/types";
@@ -27,6 +29,19 @@ export default function BudgetsClient({
 		null,
 	);
 
+	// ローディング状態（追加・編集・削除時）
+	const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
+
+	// 自動で消えるトースト通知ステート
+	const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+	const showToast = (message: string) => {
+		setToastMessage(message);
+		setTimeout(() => {
+			setToastMessage((prev) => (prev === message ? null : prev));
+		}, 2000);
+	};
+
 	// 予算の保存（追加または更新）
 	const handleSave = async (
 		name: string,
@@ -38,6 +53,7 @@ export default function BudgetsClient({
 		try {
 			if (editingSetting) {
 				// 編集モード
+				setLoadingMessage("設定を保存中...");
 				const updated = await updateBudgetAction(editingSetting.id, {
 					name,
 					budget,
@@ -50,8 +66,11 @@ export default function BudgetsClient({
 					),
 				);
 				setEditingSetting(null);
+				setLoadingMessage(null);
+				showToast("設定を保存しました");
 			} else {
 				// 新規追加
+				setLoadingMessage("カテゴリを登録中...");
 				const added = await addBudgetAction(userId, {
 					name,
 					budget,
@@ -59,9 +78,12 @@ export default function BudgetsClient({
 					memo,
 				});
 				setSettings([...settings, added]);
+				setLoadingMessage(null);
+				showToast("カテゴリを登録しました");
 			}
 		} catch (error) {
 			console.error("Failed to save budget:", error);
+			setLoadingMessage(null);
 			alert("予算の保存に失敗しました。");
 			throw error;
 		}
@@ -76,15 +98,24 @@ export default function BudgetsClient({
 	const handleDelete = async (id: string) => {
 		if (!confirm("このカテゴリを削除しますか？")) return;
 
-		const result = await deleteBudgetAction(id);
-		if (result.success) {
-			setSettings(settings.filter((item) => item.id !== id));
-			// 編集中のカテゴリが削除された場合は編集フォームをリセット
-			if (editingSetting?.id === id) {
-				setEditingSetting(null);
+		try {
+			setLoadingMessage("カテゴリを削除中...");
+			const result = await deleteBudgetAction(id);
+			setLoadingMessage(null);
+			if (result.success) {
+				setSettings(settings.filter((item) => item.id !== id));
+				// 編集中のカテゴリが削除された場合は編集フォームをリセット
+				if (editingSetting?.id === id) {
+					setEditingSetting(null);
+				}
+				showToast("削除完了しました");
+			} else {
+				alert(result.error || "カテゴリの削除に失敗しました。");
 			}
-		} else {
-			alert(result.error || "カテゴリの削除に失敗しました。");
+		} catch (error) {
+			console.error("Failed to delete budget:", error);
+			setLoadingMessage(null);
+			alert("カテゴリの削除中にエラーが発生しました。");
 		}
 	};
 
@@ -145,6 +176,52 @@ export default function BudgetsClient({
 					onCancel={() => setEditingSetting(null)}
 				/>
 			</div>
+
+			{/* 処理中ローディングオーバーレイ（登録・保存・削除） */}
+			<AnimatePresence>
+				{loadingMessage && (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.2 }}
+						className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm"
+					>
+						<motion.div
+							initial={{ scale: 0.9, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							exit={{ scale: 0.9, opacity: 0 }}
+							transition={{ duration: 0.2 }}
+							className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-950/90 border border-white/10 shadow-2xl"
+						>
+							<Loader2 className="w-8 h-8 text-violet-500 animate-spin" />
+							<p className="text-sm font-semibold text-slate-200 tracking-wide">
+								{loadingMessage}
+							</p>
+						</motion.div>
+					</motion.div>
+				)}
+			</AnimatePresence>
+
+			{/* 自動で消えるトースト通知（ヘッダー直下の中央にふわっと表示・消去） */}
+			<AnimatePresence>
+				{toastMessage && (
+					<motion.div
+						initial={{ opacity: 0, y: -20, scale: 0.95 }}
+						animate={{ opacity: 1, y: 0, scale: 1 }}
+						exit={{ opacity: 0, y: -15, scale: 0.95 }}
+						transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+						className="fixed top-20 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-slate-900/95 border border-emerald-500/30 text-white shadow-[0_10px_30px_rgba(0,0,0,0.5),0_0_20px_rgba(16,185,129,0.15)] backdrop-blur-xl max-w-[90vw] whitespace-nowrap"
+					>
+						<div className="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
+							<CheckCircle2 className="w-4 h-4 text-emerald-400" />
+						</div>
+						<span className="text-sm font-semibold text-slate-100">
+							{toastMessage}
+						</span>
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</main>
 	);
 }
