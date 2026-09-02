@@ -1,9 +1,5 @@
 import type { BudgetSetting } from "@/components/budgets/types";
-import {
-	type Expense,
-	addExpense,
-	updateExpense,
-} from "@/lib/supabase/expenses";
+import type { Expense } from "@/lib/supabase/expenses";
 import { useEffect, useState } from "react";
 import { DatePicker } from "@/components/ui/date-picker";
 import {
@@ -17,17 +13,20 @@ import {
 interface ExpenseFormModalProps {
 	onClose: () => void;
 	budgets: BudgetSetting[];
-	onSuccess: (saved: Expense) => void;
+	onSave: (data: {
+		budgetId: string;
+		amount: number;
+		date: string;
+		memo: string;
+	}) => void;
 	expenseToEdit?: Expense;
-	userId: string;
 }
 
 export function ExpenseFormModal({
 	onClose,
 	budgets,
-	onSuccess,
+	onSave,
 	expenseToEdit,
-	userId,
 }: ExpenseFormModalProps) {
 	const [selectedBudgetId, setSelectedBudgetId] = useState(
 		expenseToEdit?.budgetId || budgets[0]?.id || "",
@@ -57,7 +56,7 @@ export function ExpenseFormModal({
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, [onClose]);
 
-	const handleSubmit = async (e: React.FormEvent) => {
+	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		setFormError("");
 
@@ -74,30 +73,12 @@ export function ExpenseFormModal({
 			return;
 		}
 
-		try {
-			let saved: Expense;
-			if (expenseToEdit) {
-				saved = await updateExpense(expenseToEdit.id, {
-					budgetId: selectedBudgetId,
-					amount: Math.floor(Number(amount)),
-					date: dateInput,
-					memo: memo.trim(),
-				});
-			} else {
-				saved = await addExpense(userId, {
-					budgetId: selectedBudgetId,
-					amount: Math.floor(Number(amount)),
-					date: dateInput,
-					memo: memo.trim(),
-				});
-			}
-
-			onSuccess(saved);
-			onClose();
-		} catch (error) {
-			console.error("Failed to save expense:", error);
-			setFormError("保存に失敗しました。");
-		}
+		onSave({
+			budgetId: selectedBudgetId,
+			amount: Math.floor(Number(amount)),
+			date: dateInput,
+			memo: memo.trim(),
+		});
 	};
 
 	const isEditMode = !!expenseToEdit;

@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { Loader2, CheckCircle2 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import type { BudgetSetting } from "@/components/budgets/types";
 import {
 	type Expense,
+	addExpense,
+	updateExpense,
 	deleteExpense,
 	calculateCategorySpent,
 } from "@/lib/supabase/expenses";
@@ -24,6 +28,19 @@ export default function ExpensesClient({
 	const { user } = useCurrentUser();
 	const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
 	const [budgets] = useState<BudgetSetting[]>(initialBudgets);
+
+	// ローディング状態（追加・編集・削除時）
+	const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
+
+	// 自動で消えるトースト通知ステート
+	const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+	const showToast = (message: string) => {
+		setToastMessage(message);
+		setTimeout(() => {
+			setToastMessage((prev) => (prev === message ? null : prev));
+		}, 2000);
+	};
 
 	// 表示対象の年月 (YYYY-MM 形式)
 	const [currentMonth] = useState(() => {
@@ -72,10 +89,15 @@ export default function ExpensesClient({
 	const handleDelete = async (id: string) => {
 		if (!confirm("この出費レコードを削除しますか？")) return;
 		try {
+			setLoadingMessage("出費を削除中...");
 			await deleteExpense(id);
-			setExpenses(expenses.filter((item) => item.id !== id));
+			setExpenses((prev) => prev.filter((item) => item.id !== id));
+			setLoadingMessage(null);
+			showToast("削除完了しました");
 		} catch (error) {
 			console.error("Failed to delete expense:", error);
+			setLoadingMessage(null);
+			alert("出費の削除に失敗しました。");
 		}
 	};
 
@@ -85,17 +107,37 @@ export default function ExpensesClient({
 		setIsModalOpen(true);
 	};
 
-	// 新規登録または編集完了時の処理
-	const handleSaveSuccess = (savedExpense: Expense) => {
-		const isEdit = expenses.some((item) => item.id === savedExpense.id);
-		if (isEdit) {
-			setExpenses(
-				expenses.map((item) =>
-					item.id === savedExpense.id ? savedExpense : item,
-				),
-			);
-		} else {
-			setExpenses([savedExpense, ...expenses]);
+	// 新規登録または編集の保存処理
+	const handleSaveExpense = async (data: {
+		budgetId: string;
+		amount: number;
+		date: string;
+		memo: string;
+	}) => {
+		if (!user?.id) return;
+		const isEdit = !!expenseToEdit;
+		setLoadingMessage(isEdit ? "出費を更新中..." : "出費を記録中...");
+		handleCloseModal();
+
+		try {
+			let saved: Expense;
+			if (expenseToEdit) {
+				saved = await updateExpense(expenseToEdit.id, data);
+				setExpenses((prev) =>
+					prev.map((item) => (item.id === saved.id ? saved : item)),
+				);
+				setLoadingMessage(null);
+				showToast("出費を更新しました");
+			} else {
+				saved = await addExpense(user.id, data);
+				setExpenses((prev) => [saved, ...prev]);
+				setLoadingMessage(null);
+				showToast("出費を記録しました");
+			}
+		} catch (error) {
+			console.error("Failed to save expense:", error);
+			setLoadingMessage(null);
+			alert("出費の保存に失敗しました。");
 		}
 	};
 
@@ -256,16 +298,61 @@ export default function ExpensesClient({
 				/>
 			</div>
 
-			{/* 出費追加モーダル */}
+			{/* 出費追加・編集モーダル */}
 			{isModalOpen && (
 				<ExpenseFormModal
 					onClose={handleCloseModal}
 					budgets={budgets}
-					onSuccess={handleSaveSuccess}
+					onSave={handleSaveExpense}
 					expenseToEdit={expenseToEdit || undefined}
-					userId={user?.id || ""}
 				/>
 			)}
+
+			{/* 処理中ローディングオーバーレイ（記録・更新・削除） */}
+			<AnimatePresence>
+				{loadingMessage && (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.2 }}
+						className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm"
+					>
+						<motion.div
+							initial={{ scale: 0.9, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							exit={{ scale: 0.9, opacity: 0 }}
+							transition={{ duration: 0.2 }}
+							className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-950/90 border border-white/10 shadow-2xl"
+						>
+							<Loader2 className="w-8 h-8 text-violet-500 animate-spin" />
+							<p className="text-sm font-semibold text-slate-200 tracking-wide">
+								{loadingMessage}
+							</p>
+						</motion.div>
+					</motion.div>
+				)}
+			</AnimatePresence>
+
+			{/* 自動で消えるトースト通知（ヘッダー直下の中央にふわっと表示・消去） */}
+			<AnimatePresence>
+				{toastMessage && (
+					<motion.div
+						initial={{ opacity: 0, y: -20, scale: 0.95 }}
+						animate={{ opacity: 1, y: 0, scale: 1 }}
+						exit={{ opacity: 0, y: -15, scale: 0.95 }}
+						transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+						className="fixed top-20 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-slate-900/95 border border-emerald-500/30 text-white shadow-[0_10px_30px_rgba(0,0,0,0.5),0_0_20px_rgba(16,185,129,0.15)] backdrop-blur-xl max-w-[90vw] whitespace-nowrap"
+					>
+						<div className="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
+							<CheckCircle2 className="w-4 h-4 text-emerald-400" />
+						</div>
+						<span className="text-sm font-semibold text-slate-100">
+							{toastMessage}
+						</span>
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</main>
 	);
 }
