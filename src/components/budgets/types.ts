@@ -4,6 +4,7 @@ export interface BudgetSetting {
 	budget: number;
 	color: string;
 	memo?: string;
+	isArchived?: boolean;
 }
 
 export interface ColorVariant {

@@ -1,6 +1,5 @@
-import type { BudgetSetting } from "@/components/budgets/types";
-import type { Expense } from "@/lib/supabase/expenses";
 import { useEffect, useState } from "react";
+import type { BudgetSetting } from "@/components/budgets/types";
 import { DatePicker } from "@/components/ui/date-picker";
 import {
 	Select,
@@ -9,6 +8,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import type { Expense } from "@/lib/supabase/expenses";
 
 interface ExpenseFormModalProps {
 	onClose: () => void;
@@ -28,8 +28,13 @@ export function ExpenseFormModal({
 	onSave,
 	expenseToEdit,
 }: ExpenseFormModalProps) {
+	// 新規作成時はアーカイブされた予算を除外。編集時は既存の選択中カテゴリのみ例外的に許可
+	const availableBudgets = budgets.filter(
+		(b) => !b.isArchived || b.id === expenseToEdit?.budgetId,
+	);
+
 	const [selectedBudgetId, setSelectedBudgetId] = useState(
-		expenseToEdit?.budgetId || budgets[0]?.id || "",
+		expenseToEdit?.budgetId || availableBudgets[0]?.id || "",
 	);
 	const [amount, setAmount] = useState<number | "">(
 		expenseToEdit?.amount ?? "",
@@ -136,23 +141,26 @@ export function ExpenseFormModal({
 						>
 							予算カテゴリ
 						</label>
-						{budgets.length === 0 ? (
+						{availableBudgets.length === 0 ? (
 							<div className="text-xs text-slate-500 bg-white/5 rounded-xl p-3 border border-white/5">
-								カテゴリが設定されていません。先に「予算管理」画面からカテゴリを登録してください。
+								利用可能なカテゴリがありません。先に「予算管理」画面からカテゴリを登録してください。
 							</div>
 						) : (
 							<Select
 								value={selectedBudgetId}
 								onValueChange={(val) => setSelectedBudgetId(val || "")}
-								items={budgets.map((b) => ({ label: b.name, value: b.id }))}
+								items={availableBudgets.map((b) => ({
+									label: b.isArchived ? `${b.name} (アーカイブ済み)` : b.name,
+									value: b.id,
+								}))}
 							>
 								<SelectTrigger className="w-full bg-[#030616]/80 border border-white/10 text-slate-200 text-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-violet-500/50 hover:border-white/20 transition-all cursor-pointer rounded-xl">
 									<SelectValue placeholder="カテゴリを選択" />
 								</SelectTrigger>
 								<SelectContent className="bg-slate-950 border-white/10 text-slate-200">
-									{budgets.map((b) => (
+									{availableBudgets.map((b) => (
 										<SelectItem key={b.id} value={b.id}>
-											{b.name}
+											{b.isArchived ? `${b.name} (アーカイブ済み)` : b.name}
 										</SelectItem>
 									))}
 								</SelectContent>

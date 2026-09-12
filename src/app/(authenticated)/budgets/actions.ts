@@ -1,16 +1,16 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
-import { getCurrentUser } from "@/lib/supabase/dal";
-import {
-	addBudget,
-	updateBudget,
-	deleteBudget,
-	getBudgets,
-} from "@/lib/supabase/budgets";
-import type { BudgetSetting } from "@/components/budgets/types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
+import type { BudgetSetting } from "@/components/budgets/types";
+import {
+	addBudget,
+	deleteBudget,
+	getBudgets,
+	updateBudget,
+} from "@/lib/supabase/budgets";
+import { getCurrentUser } from "@/lib/supabase/dal";
+import { createClient } from "@/lib/supabase/server";
 
 // 履歴スナップショットを生成して保存するヘルパー関数
 export async function saveBudgetHistorySnapshot(
@@ -116,7 +116,7 @@ export async function updateBudgetAction(
  */
 export async function deleteBudgetAction(
 	id: string,
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; archived?: boolean; error?: string }> {
 	const user = await getCurrentUser();
 	if (!user) {
 		throw new Error("Unauthorized");
@@ -135,19 +135,21 @@ export async function deleteBudgetAction(
 		return { success: false, error: "権限がありません。" };
 	}
 
-	// 1. 予算設定の削除
+	// 1. 予算設定の削除またはアーカイブ
 	const result = await deleteBudget(id, supabase);
 
 	if (!result.success) {
 		return result;
 	}
 
-	// 2. 履歴スナップショットの保存
+	// 2. 履歴スナップショットの保存（アーカイブ除外後のアクティブな予算のみ保存される）
 	await saveBudgetHistorySnapshot(user.id, supabase);
 
 	// 3. キャッシュ再検証
 	revalidatePath("/budgets");
+	revalidatePath("/expenses");
+	revalidatePath("/dashboard");
 	revalidatePath("/history");
 
-	return { success: true };
+	return { success: true, archived: result.archived };
 }

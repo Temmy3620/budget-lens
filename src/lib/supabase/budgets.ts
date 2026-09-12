@@ -1,22 +1,30 @@
-import { createClient } from "@/lib/supabase/client";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { BudgetSetting } from "@/components/budgets/types";
+import { createClient } from "@/lib/supabase/client";
 
 /**
  * データベースからログインユーザーのIDに該当する予算設定一覧を取得する
  * @param userId ログインユーザーのID
  * @param client Supabaseクライアント（オプション）
+ * @param options オプション（includeArchived: true でアーカイブされた予算も含めて取得）
  */
 export async function getBudgets(
 	userId: string,
 	client?: SupabaseClient,
+	options?: { includeArchived?: boolean },
 ): Promise<BudgetSetting[]> {
 	const supabase = client ?? createClient();
-	const { data, error } = await supabase
+	let query = supabase
 		.from("budgets")
 		.select("*")
 		.eq("user_id", userId)
 		.order("created_at", { ascending: true });
+
+	if (!options?.includeArchived) {
+		query = query.eq("is_archived", false);
+	}
+
+	const { data, error } = await query;
 
 	if (error) {
 		console.error("Failed to fetch budgets from Supabase:", error);
@@ -29,6 +37,7 @@ export async function getBudgets(
 		budget: budget.budget,
 		color: budget.color,
 		memo: budget.memo || undefined,
+		isArchived: budget.is_archived ?? false,
 	}));
 }
 
@@ -67,6 +76,7 @@ export async function addBudget(
 		budget: data.budget,
 		color: data.color,
 		memo: data.memo || undefined,
+		isArchived: data.is_archived ?? false,
 	};
 }
 
@@ -105,31 +115,45 @@ export async function updateBudget(
 		budget: data.budget,
 		color: data.color,
 		memo: data.memo || undefined,
+		isArchived: data.is_archived ?? false,
 	};
 }
 
 /**
- * 予算設定を削除する。紐づく出費（Expense）が存在する場合は削除処理をブロックする。
+ * 予算設定を削除またはアーカイブする。
+ * - 今月以降（未来含む）の出費が存在する場合は削除をブロック
+ * - 過去月のみに出費が存在する場合はアーカイブ（論理削除）
+ * - 出費が一切存在しない場合は物理削除
  * @param id 予算レコードのID
  * @param client Supabaseクライアント（オプション）
  */
 export async function deleteBudget(
 	id: string,
 	client?: SupabaseClient,
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; archived?: boolean; error?: string }> {
 	const supabase = client ?? createClient();
 
 	try {
-		// 紐づく出費が存在するかどうかチェック
-		const { count, error: countError } = await supabase
-			.from("expenses")
-			.select("id", { count: "exact", head: true })
-			.eq("budget_id", id);
+		// 日本時間 (JST) での当月1日の日付文字列 ("YYYY-MM-01") を生成
+		const nowJST = new Date(
+			new Date().toLocaleString("en-US", { timeZone: "Asia/Tokyo" }),
+		);
+		const currentYear = nowJST.getFullYear();
+		const currentMonth = String(nowJST.getMonth() + 1).padStart(2, "0");
+		const startOfCurrentMonth = `${currentYear}-${currentMonth}-01`;
 
-		if (countError) {
+		// 1. 今月以降（当月1日以降）に使われている出費があるかチェック
+		const { count: currentOrFutureCount, error: currentOrFutureError } =
+			await supabase
+				.from("expenses")
+				.select("id", { count: "exact", head: true })
+				.eq("budget_id", id)
+				.gte("date", startOfCurrentMonth);
+
+		if (currentOrFutureError) {
 			console.warn(
-				"Failed to check linked expenses from Supabase:",
-				countError,
+				"Failed to check current/future expenses from Supabase:",
+				currentOrFutureError,
 			);
 			return {
 				success: false,
@@ -137,13 +161,48 @@ export async function deleteBudget(
 			};
 		}
 
-		if (count !== null && count > 0) {
+		if (currentOrFutureCount !== null && currentOrFutureCount > 0) {
 			return {
 				success: false,
-				error: "このカテゴリは現在出費で使用されているため削除できません。",
+				error:
+					"今月以降の出費で使用されているため削除できません。出費のカテゴリを変更するか削除してください。",
 			};
 		}
 
+		// 2. 過去月（当月1日より前）に使われている出費があるかチェック
+		const { count: pastCount, error: pastError } = await supabase
+			.from("expenses")
+			.select("id", { count: "exact", head: true })
+			.eq("budget_id", id)
+			.lt("date", startOfCurrentMonth);
+
+		if (pastError) {
+			console.warn("Failed to check past expenses from Supabase:", pastError);
+			return {
+				success: false,
+				error: "データベース接続エラーが発生しました。",
+			};
+		}
+
+		if (pastCount !== null && pastCount > 0) {
+			// 過去の出費が存在する場合は論理削除（アーカイブ）
+			const { error: archiveError } = await supabase
+				.from("budgets")
+				.update({ is_archived: true })
+				.eq("id", id);
+
+			if (archiveError) {
+				console.warn("Failed to archive budget in Supabase:", archiveError);
+				return {
+					success: false,
+					error: "カテゴリのアーカイブに失敗しました。",
+				};
+			}
+
+			return { success: true, archived: true };
+		}
+
+		// 3. 出費が一切ない場合は物理削除
 		const { error } = await supabase.from("budgets").delete().eq("id", id);
 
 		if (error) {
@@ -151,7 +210,7 @@ export async function deleteBudget(
 			return { success: false, error: "カテゴリの削除に失敗しました。" };
 		}
 
-		return { success: true };
+		return { success: true, archived: false };
 	} catch (err) {
 		console.warn("Unexpected error in deleteBudget:", err);
 		return { success: false, error: "予期しないエラーが発生しました。" };
@@ -194,5 +253,6 @@ export async function addBudgets(
 		budget: budget.budget,
 		color: budget.color,
 		memo: budget.memo || undefined,
+		isArchived: budget.is_archived ?? false,
 	}));
 }

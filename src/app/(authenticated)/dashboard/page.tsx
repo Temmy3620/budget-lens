@@ -1,6 +1,6 @@
 import DashboardClient from "@/components/dashboard/dashboard-client";
-import { getCurrentUser } from "@/lib/supabase/dal";
 import { getBudgets } from "@/lib/supabase/budgets";
+import { getCurrentUser } from "@/lib/supabase/dal";
 import { getExpenses } from "@/lib/supabase/expenses";
 import { createClient } from "@/lib/supabase/server";
 
@@ -16,7 +16,7 @@ export default async function DashboardPage() {
 
 	const supabase = await createClient();
 	const [budgets, expenses] = await Promise.all([
-		getBudgets(user.id, supabase),
+		getBudgets(user.id, supabase, { includeArchived: true }),
 		getExpenses(user.id, supabase),
 	]);
 

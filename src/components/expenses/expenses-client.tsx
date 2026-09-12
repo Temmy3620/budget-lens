@@ -1,20 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
 import type { BudgetSetting } from "@/components/budgets/types";
+import { CategoryBudgetProgressList } from "@/components/ui/category-budget-progress";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import {
-	type Expense,
 	addExpense,
-	updateExpense,
-	deleteExpense,
 	calculateCategorySpent,
+	deleteExpense,
+	type Expense,
+	updateExpense,
 } from "@/lib/supabase/expenses";
 import { ExpenseFormModal } from "./expense-form-modal";
 import { ExpenseList } from "./expense-list";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { CategoryBudgetProgressList } from "@/components/ui/category-budget-progress";
 
 interface ExpensesClientProps {
 	initialBudgets: BudgetSetting[];
@@ -82,8 +82,11 @@ export default function ExpensesClient({
 	// カテゴリごとの総支出を計算
 	const categorySpentMap = calculateCategorySpent(filteredExpenses);
 
-	// 設定済み予算の合計
-	const totalBudget = budgets.reduce((sum, item) => sum + item.budget, 0);
+	// 有効（アーカイブされていない）予算
+	const activeBudgets = budgets.filter((b) => !b.isArchived);
+
+	// 設定済み予算の合計（アクティブな予算のみ）
+	const totalBudget = activeBudgets.reduce((sum, item) => sum + item.budget, 0);
 
 	// 出費の削除
 	const handleDelete = async (id: string) => {
@@ -221,7 +224,7 @@ export default function ExpensesClient({
 							カテゴリ別の予算消化状況
 						</h3>
 						<CategoryBudgetProgressList
-							budgets={budgets}
+							budgets={activeBudgets}
 							categorySpentMap={categorySpentMap}
 						/>
 					</div>

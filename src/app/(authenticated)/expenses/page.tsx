@@ -1,7 +1,7 @@
 import ExpensesClient from "@/components/expenses/expenses-client";
 import { getBudgets } from "@/lib/supabase/budgets";
-import { getExpenses } from "@/lib/supabase/expenses";
 import { getCurrentUser } from "@/lib/supabase/dal";
+import { getExpenses } from "@/lib/supabase/expenses";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
@@ -16,7 +16,7 @@ export default async function ExpensesPage() {
 
 	const supabase = await createClient();
 	const [budgets, expenses] = await Promise.all([
-		getBudgets(user.id, supabase),
+		getBudgets(user.id, supabase, { includeArchived: true }),
 		getExpenses(user.id, supabase),
 	]);
 

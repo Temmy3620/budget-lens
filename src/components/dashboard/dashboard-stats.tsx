@@ -14,8 +14,10 @@ export function DashboardStats({
 	thisMonthExpenses,
 	lastMonthExpenses,
 }: DashboardStatsProps) {
-	// 総予算
-	const totalBudget = budgets.reduce((sum, b) => sum + b.budget, 0);
+	// 総予算（アクティブな予算のみで集計）
+	const totalBudget = budgets
+		.filter((b) => !b.isArchived)
+		.reduce((sum, b) => sum + b.budget, 0);
 	// 今月の総支出
 	const totalSpent = thisMonthExpenses.reduce((sum, e) => sum + e.amount, 0);
 	// 残り予算
