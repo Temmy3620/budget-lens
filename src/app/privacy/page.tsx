@@ -1,8 +1,7 @@
-import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/navigation/footer";
+import PublicHeader from "@/components/navigation/public-header";
 
 export const metadata: Metadata = {
 	title: "プライバシーポリシー | YariKuru",
@@ -13,38 +12,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
 	return (
 		<div className="min-h-screen bg-[#030616] text-[#e2e8f0] flex flex-col font-sans selection:bg-violet-500/30">
-			{/* ヘッダー */}
-			<header className="sticky top-0 z-50 backdrop-blur-md border-b border-white/5 bg-[#0a0f24]/50">
-				<div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-					<Link
-						href="/"
-						className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
-					>
-						<Image
-							src="/icon_v6.png"
-							alt="YariKuru Logo"
-							width={36}
-							height={36}
-							className="w-9 h-9 object-contain"
-						/>
-						<Image
-							src="/title_v2.png"
-							alt="YariKuru"
-							width={110}
-							height={26}
-							className="h-6 w-auto object-contain"
-							priority
-						/>
-					</Link>
-					<Link
-						href="/"
-						className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
-					>
-						<ArrowLeft className="h-4 w-4" />
-						トップページに戻る
-					</Link>
-				</div>
-			</header>
+			<PublicHeader />
 
 			{/* メインコンテンツ */}
 			<main className="flex-1 max-w-4xl w-full mx-auto px-6 py-12 md:py-16">
