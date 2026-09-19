@@ -87,16 +87,19 @@ export async function updateSession(request: NextRequest) {
 
 	// ログイン済みのユーザーに対する制御
 	if (user) {
-		// データベース(public.users)から最新のサブスクステータスを直接取得（クッキーのキャッシュタイムラグを防ぐため）
+		// データベース(public.users)から最新のサブスクステータスおよび管理者ステータスを直接取得（クッキーのキャッシュタイムラグを防ぐため）
 		const { data: dbUser } = await supabase
 			.from("users")
-			.select("subscription_status")
+			.select("subscription_status, is_admin")
 			.eq("id", user.id)
 			.maybeSingle();
 
 		const subscriptionStatus = dbUser?.subscription_status || "free";
+		const isAdmin = dbUser?.is_admin === true;
 		const hasActiveSub =
-			subscriptionStatus === "trialing" || subscriptionStatus === "active";
+			isAdmin ||
+			subscriptionStatus === "trialing" ||
+			subscriptionStatus === "active";
 		const isOnboarded = user.user_metadata?.onboarded === true;
 
 		// ログイン済みユーザーがログイン画面にアクセスした場合、すべて完了しているならダッシュボードへ

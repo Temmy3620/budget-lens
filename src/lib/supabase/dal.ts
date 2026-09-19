@@ -37,10 +37,23 @@ export const getCurrentUser = cache(async () => {
 	}
 
 	// Just In Time (JIT) 同期: public.users にプロフィールレコードがない場合は作成します
+	let isAdmin = false;
 	try {
+		// 1. admin テーブルに登録されているか確認
+		let isAdminInTable = false;
+		if (user.email) {
+			const { data: adminRecord } = await supabase
+				.from("admin")
+				.select("id")
+				.eq("email", user.email)
+				.maybeSingle();
+			isAdminInTable = !!adminRecord;
+		}
+
+		// 2. public.users のプロフィール確認と同期
 		const { data: profile } = await supabase
 			.from("users")
-			.select("id")
+			.select("id, is_admin")
 			.eq("id", user.id)
 			.maybeSingle();
 
@@ -49,9 +62,25 @@ export const getCurrentUser = cache(async () => {
 				id: user.id,
 				email: user.email ?? "",
 				name: user.user_metadata?.name ?? "新規ユーザー",
+				is_admin: isAdminInTable,
 			});
 			if (insertError) {
 				console.error("JIT Sync insert error detail:", insertError);
+			}
+			isAdmin = isAdminInTable;
+		} else {
+			isAdmin = profile.is_admin ?? false;
+			// admin テーブルの状態と users.is_admin が一致しない場合は同期更新
+			if (profile.is_admin !== isAdminInTable) {
+				const { error: updateError } = await supabase
+					.from("users")
+					.update({ is_admin: isAdminInTable })
+					.eq("id", user.id);
+				if (!updateError) {
+					isAdmin = isAdminInTable;
+				} else {
+					console.error("Failed to update user is_admin status:", updateError);
+				}
 			}
 		}
 	} catch (err) {
@@ -62,5 +91,6 @@ export const getCurrentUser = cache(async () => {
 	return {
 		id: user.id,
 		email: user.email ?? "",
+		isAdmin,
 	};
 });

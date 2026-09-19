@@ -8,11 +8,13 @@ import { AccountDeletionSection } from "./AccountDeletionSection";
 interface SettingsClientProps {
 	subscriptionStatus: string;
 	trialEndsAt: string | null;
+	isAdmin?: boolean;
 }
 
 export default function SettingsClient({
 	subscriptionStatus,
 	trialEndsAt,
+	isAdmin = false,
 }: SettingsClientProps) {
 	return (
 		<main className="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full space-y-6">
@@ -33,6 +35,7 @@ export default function SettingsClient({
 			<BillingSettingsSection
 				subscriptionStatus={subscriptionStatus}
 				trialEndsAt={trialEndsAt}
+				isAdmin={isAdmin}
 			/>
 
 			{/* データの初期化セクション */}

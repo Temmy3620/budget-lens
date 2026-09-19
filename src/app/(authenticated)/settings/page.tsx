@@ -14,7 +14,7 @@ export default async function SettingsPage() {
 	const supabase = await createClient();
 	const { data: dbUser } = await supabase
 		.from("users")
-		.select("subscription_status, trial_ends_at")
+		.select("subscription_status, trial_ends_at, is_admin")
 		.eq("id", user.id)
 		.maybeSingle();
 
@@ -22,6 +22,7 @@ export default async function SettingsPage() {
 		<SettingsClient
 			subscriptionStatus={dbUser?.subscription_status ?? "free"}
 			trialEndsAt={dbUser?.trial_ends_at ?? null}
+			isAdmin={dbUser?.is_admin ?? false}
 		/>
 	);
 }

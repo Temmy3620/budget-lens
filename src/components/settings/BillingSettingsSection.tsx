@@ -15,11 +15,13 @@ import {
 interface BillingSettingsSectionProps {
 	subscriptionStatus: string;
 	trialEndsAt: string | null;
+	isAdmin?: boolean;
 }
 
 export function BillingSettingsSection({
 	subscriptionStatus,
 	trialEndsAt,
+	isAdmin = false,
 }: BillingSettingsSectionProps) {
 	const [isPortalLoading, setIsPortalLoading] = useState(false);
 	const [portalError, setPortalError] = useState<string | null>(null);
@@ -88,7 +90,12 @@ export function BillingSettingsSection({
 
 				{/* ステータスバッジ */}
 				<div>
-					{isTrialing ? (
+					{isAdmin ? (
+						<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 border border-purple-500/30 text-purple-300 shadow-sm shadow-purple-950/40">
+							<Sparkles className="w-3.5 h-3.5 text-purple-400" />
+							管理者アカウント
+						</span>
+					) : isTrialing ? (
 						<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shadow-sm shadow-emerald-950/40">
 							<Sparkles className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
 							90日間無料トライアル中
@@ -106,8 +113,20 @@ export function BillingSettingsSection({
 				</div>
 			</div>
 
+			{/* 管理者アカウントの場合 */}
+			{isAdmin && (
+				<div className="p-4 rounded-xl bg-purple-950/20 border border-purple-500/20 text-xs text-slate-300 leading-relaxed space-y-1">
+					<p className="font-semibold text-purple-200">
+						管理者特権が適用されています
+					</p>
+					<p className="text-slate-400">
+						本環境ではStripe決済を行わずにすべての機能をご利用いただけます。管理者ユーザーのため、決済ポータルでの支払い管理は不要です。
+					</p>
+				</div>
+			)}
+
 			{/* トライアル中ハイライトボックス */}
-			{isTrialing && (
+			{!isAdmin && isTrialing && (
 				<div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/30 via-teal-950/20 to-indigo-950/30 border border-emerald-500/20 space-y-2">
 					<div className="flex items-center justify-between flex-wrap gap-2">
 						<div className="flex items-center gap-2 text-xs font-medium text-emerald-300">
@@ -132,14 +151,14 @@ export function BillingSettingsSection({
 			)}
 
 			{/* 通常のアクティブプランの場合 */}
-			{isActive && (
+			{!isAdmin && isActive && (
 				<div className="p-4 rounded-xl bg-indigo-950/20 border border-indigo-500/20 text-xs text-slate-300 leading-relaxed">
 					プレミアム月額プランが有効です。すべての機能をご利用いただけます。次回の請求日や請求書履歴の確認、カード情報の変更はStripeカスタマーポータルより行えます。
 				</div>
 			)}
 
 			{/* 未加入（フリープラン）の場合 */}
-			{!isSubscribed && (
+			{!isAdmin && !isSubscribed && (
 				<div className="p-4 rounded-xl bg-slate-900/40 border border-white/5 space-y-3">
 					<div className="flex items-center gap-2 text-xs text-slate-300">
 						<AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
@@ -161,7 +180,7 @@ export function BillingSettingsSection({
 			)}
 
 			{/* Stripe Customer Portal ボタン */}
-			{isSubscribed && (
+			{!isAdmin && isSubscribed && (
 				<div className="pt-2">
 					<button
 						type="button"

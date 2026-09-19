@@ -14,6 +14,16 @@ export async function POST(req: Request) {
 			);
 		}
 
+		if (user.isAdmin) {
+			return NextResponse.json(
+				{
+					error:
+						"管理者アカウントのため、Stripeカスタマーポータルはご利用いただけません。",
+				},
+				{ status: 400 },
+			);
+		}
+
 		// 2. データベースからユーザーの Stripe Customer ID を取得
 		const supabaseAdmin = createServiceRoleClient();
 		const { data: dbUser, error: dbUserError } = await supabaseAdmin
