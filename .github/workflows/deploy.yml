@@ -1,0 +1,99 @@
+name: Deploy to Cloud Run
+
+on:
+  workflow_dispatch: # GitHub画面からの手動実行
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID || 'yarikuru-prod' }}
+  SERVICE_NAME: "yarikuru"
+  REGION: "asia-northeast1"
+  REPO_NAME: "yarikuru-repo"
+  IMAGE_NAME: "yarikuru"
+  PORT: "8080"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Google Cloud 認証
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # Docker Buildx のセットアップ (GitHub Actions のビルドキャッシュ有効化)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Artifact Registry への Docker 認証
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker "${{ env.REGION }}-docker.pkg.dev" --quiet
+
+      # Artifact Registry リポジトリの存在確認・無ければ作成
+      - name: Ensure Artifact Registry Repository
+        run: |
+          if ! gcloud artifacts repositories describe "${{ env.REPO_NAME }}" \
+            --location="${{ env.REGION }}" \
+            --project="${{ env.PROJECT_ID }}" >/dev/null 2>&1; then
+            echo "Creating Artifact Registry repository: ${{ env.REPO_NAME }}"
+            gcloud artifacts repositories create "${{ env.REPO_NAME }}" \
+              --repository-format=docker \
+              --location="${{ env.REGION }}" \
+              --project="${{ env.PROJECT_ID }}" \
+              --description="Docker repository for ${{ env.SERVICE_NAME }}"
+          fi
+
+      # イメージタグの生成
+      - name: Generate Image Tags
+        id: meta
+        run: |
+          TAG=$(date +%Y%m%d-%H%M%S)
+          AR_URI="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.IMAGE_NAME }}:${TAG}"
+          LATEST_URI="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.IMAGE_NAME }}:latest"
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "ar_uri=${AR_URI}" >> $GITHUB_OUTPUT
+          echo "latest_uri=${LATEST_URI}" >> $GITHUB_OUTPUT
+
+      # Docker ビルド & Push（GitHub Actions キャッシュで爆速化）
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          tags: |
+            ${{ steps.meta.outputs.ar_uri }}
+            ${{ steps.meta.outputs.latest_uri }}
+          build-args: |
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+            NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Cloud Run へのデプロイ
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy "${{ env.SERVICE_NAME }}" \
+            --image="${{ steps.meta.outputs.ar_uri }}" \
+            --project="${{ env.PROJECT_ID }}" \
+            --platform=managed \
+            --region="${{ env.REGION }}" \
+            --allow-unauthenticated \
+            --port="${{ env.PORT }}" \
+            --set-env-vars \
+          NODE_ENV="production",\
+          SUPABASE_SERVICE_ROLE_KEY="${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}",\
+          STRIPE_SECRET_KEY="${{ secrets.STRIPE_SECRET_KEY }}",\
+          STRIPE_WEBHOOK_SECRET="${{ secrets.STRIPE_WEBHOOK_SECRET }}",\
+          STRIPE_PRICE_ID="${{ secrets.STRIPE_PRICE_ID }}"
