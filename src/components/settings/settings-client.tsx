@@ -1,9 +1,9 @@
 "use client";
 
 import { Settings } from "lucide-react";
+import { AccountDeletionSection } from "./AccountDeletionSection";
 import { BillingSettingsSection } from "./BillingSettingsSection";
 import { DataResetSection } from "./DataResetSection";
-import { AccountDeletionSection } from "./AccountDeletionSection";
 
 interface SettingsClientProps {
 	subscriptionStatus: string;
@@ -42,7 +42,7 @@ export default function SettingsClient({
 			<DataResetSection />
 
 			{/* アカウント削除（退会）セクション */}
-			<AccountDeletionSection />
+			<AccountDeletionSection isAdmin={isAdmin} />
 		</main>
 	);
 }
