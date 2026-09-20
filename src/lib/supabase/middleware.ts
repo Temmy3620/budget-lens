@@ -94,8 +94,36 @@ export async function updateSession(request: NextRequest) {
 			.eq("id", user.id)
 			.maybeSingle();
 
+		let isAdmin = dbUser?.is_admin === true;
+
+		// 新規登録直後などでまだ public.users にレコードがない、または is_admin が未同期の場合、admin テーブルを直接チェック
+		if (!isAdmin && user.email) {
+			const { data: adminRecord } = await supabase
+				.from("admin")
+				.select("id")
+				.eq("email", user.email)
+				.maybeSingle();
+
+			if (adminRecord) {
+				isAdmin = true;
+				// public.users が既に存在する場合は更新、なければ即時作成
+				if (dbUser) {
+					await supabase
+						.from("users")
+						.update({ is_admin: true })
+						.eq("id", user.id);
+				} else {
+					await supabase.from("users").insert({
+						id: user.id,
+						email: user.email,
+						name: user.user_metadata?.name ?? "管理者",
+						is_admin: true,
+					});
+				}
+			}
+		}
+
 		const subscriptionStatus = dbUser?.subscription_status || "free";
-		const isAdmin = dbUser?.is_admin === true;
 		const hasActiveSub =
 			isAdmin ||
 			subscriptionStatus === "trialing" ||
