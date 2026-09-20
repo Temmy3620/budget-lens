@@ -1,7 +1,7 @@
 "use server";
 
-import { headers } from "next/headers";
 import { sendPasswordResetEmail } from "@/lib/supabase/auth";
+import { getBaseUrl } from "@/lib/url";
 import type { ForgotPasswordFormState } from "@/types/auth";
 import { ForgotPasswordFormSchema } from "./schemas";
 
@@ -25,13 +25,11 @@ export async function sendResetEmail(
 
 	const { email } = validatedFields.data;
 
-	// リダイレクト先URLの構築 (開発環境のポート:3005 等に動的に対応)
-	const headersList = await headers();
-	const host = headersList.get("host");
-	const protocol = host?.includes("localhost") ? "http" : "https";
+	// リダイレクト先URLの構築
+	const baseUrl = await getBaseUrl();
 
 	// auth/callback を経由して最終的に /reset-password にリダイレクトさせる
-	const emailRedirectTo = `${protocol}://${host}/auth/callback?next=/reset-password`;
+	const emailRedirectTo = `${baseUrl}/auth/callback?next=/reset-password`;
 
 	try {
 		await sendPasswordResetEmail(email, emailRedirectTo);

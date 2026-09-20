@@ -2,14 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
-import { LoginFormSchema, SignUpFormSchema } from "./schemas";
-import type { LoginFormState, SignUpFormState } from "@/types/auth";
 import {
 	loginWithEmailAndPassword,
-	signUpWithEmailAndPassword,
 	signOutUser,
+	signUpWithEmailAndPassword,
 } from "@/lib/supabase/auth";
+import { getBaseUrl } from "@/lib/url";
+import type { LoginFormState, SignUpFormState } from "@/types/auth";
+import { LoginFormSchema, SignUpFormSchema } from "./schemas";
 
 /**
  * ログインアクション
@@ -85,11 +85,9 @@ export async function signup(
 
 	const { name, email, password } = validatedFields.data;
 
-	// リダイレクト先URLの構築 (開発環境のポート:3005 等に動的に対応)
-	const headersList = await headers();
-	const host = headersList.get("host");
-	const protocol = host?.includes("localhost") ? "http" : "https";
-	const emailRedirectTo = `${protocol}://${host}/auth/callback`;
+	// リダイレクト先URLの構築
+	const baseUrl = await getBaseUrl();
+	const emailRedirectTo = `${baseUrl}/auth/callback`;
 
 	try {
 		// 認証処理をデータアクセス層経由で実行
