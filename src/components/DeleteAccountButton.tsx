@@ -1,9 +1,15 @@
 "use client";
 
+import { AlertTriangle, Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { Trash2, AlertTriangle, Loader2 } from "lucide-react";
 
-export function DeleteAccountButton() {
+interface DeleteAccountButtonProps {
+	isAdmin?: boolean;
+}
+
+export function DeleteAccountButton({
+	isAdmin = false,
+}: DeleteAccountButtonProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -76,8 +82,16 @@ export function DeleteAccountButton() {
 						</div>
 
 						<p className="text-xs text-slate-450 leading-relaxed">
-							退会するとアカウントが完全に削除され、登録していたやりくりデータ（予算、出費）や履歴は復元できません。
-							また、**Stripeの月額サブスクリプションも即時に解約**され、今後の課金は一切発生しなくなります。
+							{isAdmin ? (
+								<>
+									退会するとアカウントが削除され、登録していたやりくりデータ（予算、出費）や履歴は復元できません。管理者アカウントのため、Stripeの決済解約等の手続きは発生しません。
+								</>
+							) : (
+								<>
+									退会するとアカウントが完全に削除され、登録していたやりくりデータ（予算、出費）や履歴は復元できません。
+									また、**Stripeの月額サブスクリプションも即時に解約**され、今後の課金は一切発生しなくなります。
+								</>
+							)}
 						</p>
 
 						<div className="flex gap-3 pt-2">

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-import { createServiceRoleClient } from "@/lib/supabase/service-role";
-import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/supabase/dal";
+import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 
-export async function POST(req: Request) {
+export async function POST(_req: Request) {
 	try {
 		// 1. 認証セッションの検証
 		const user = await getCurrentUser();
@@ -17,31 +17,32 @@ export async function POST(req: Request) {
 
 		const supabaseAdmin = createServiceRoleClient();
 
-		// 2. StripeサブスクリプションIDの取得
-		const { data: dbUser, error: dbUserError } = await supabaseAdmin
-			.from("users")
-			.select("stripe_subscription_id")
-			.eq("id", user.id)
-			.maybeSingle();
+		// 2. Stripeサブスクリプションの即時解約 (※一般ユーザーのみ実行。管理者は決済を持たないためスキップ)
+		if (!user.isAdmin) {
+			const { data: dbUser, error: dbUserError } = await supabaseAdmin
+				.from("users")
+				.select("stripe_subscription_id")
+				.eq("id", user.id)
+				.maybeSingle();
 
-		if (dbUserError) {
-			console.error("Failed to query user profile details:", dbUserError);
-		}
+			if (dbUserError) {
+				console.error("Failed to query user profile details:", dbUserError);
+			}
 
-		// 3. Stripeサブスクリプションの即時解約
-		if (dbUser?.stripe_subscription_id) {
-			try {
-				await stripe.subscriptions.cancel(dbUser.stripe_subscription_id);
-				console.log(
-					`Stripe subscription ${dbUser.stripe_subscription_id} canceled successfully for user ${user.id}`,
-				);
-			} catch (stripeErr) {
-				// すでに解約済み等の理由でStripe APIがエラーを返した場合でも、
-				// アカウント削除自体は完了できるよう、エラーを許容して続行します。
-				console.error(
-					"Stripe subscription cancellation failed during account deletion:",
-					stripeErr,
-				);
+			if (dbUser?.stripe_subscription_id) {
+				try {
+					await stripe.subscriptions.cancel(dbUser.stripe_subscription_id);
+					console.log(
+						`Stripe subscription ${dbUser.stripe_subscription_id} canceled successfully for user ${user.id}`,
+					);
+				} catch (stripeErr) {
+					// すでに解約済み等の理由でStripe APIがエラーを返した場合でも、
+					// アカウント削除自体は完了できるよう、エラーを許容して続行します。
+					console.error(
+						"Stripe subscription cancellation failed during account deletion:",
+						stripeErr,
+					);
+				}
 			}
 		}
 
