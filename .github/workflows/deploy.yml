@@ -1,6 +1,16 @@
 name: Deploy to Cloud Run
 
 on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      - '.gitignore'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
+      - 'GEMINI.md'
   workflow_dispatch: # GitHub画面からの手動実行
 
 env:
