@@ -15,26 +15,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
 	metadataBase: new URL("https://yarikuru.com"),
-	title: "YariKuru（ヤリクル）| やりくり予算に特化したシンプルな予算管理アプリ",
-	description:
-		"YariKuru（ヤリクル）は、固定費を除外した「自分でコントロールできるやりくり予算」だけに集中できる予算管理アプリです。直感的な円グラフと過去のスナップショット機能で、日々のやりくりをスマートにサポートします。",
-	keywords: [
-		"YariKuru",
-		"ヤリクル",
-		"やりくり",
-		"予算管理アプリ",
-		"家計簿アプリ",
-	],
-	openGraph: {
-		title:
-			"YariKuru（ヤリクル）| やりくり予算に特化したシンプルな予算管理アプリ",
-		description:
-			"固定費のノイズを排除し、「今月あといくら使えるか」に特化。過去のやりくり設定も正確に振り返れます。",
-		url: "https://yarikuru.com",
-		siteName: "YariKuru",
-		locale: "ja_JP",
-		type: "website",
+	title: {
+		default: "YariKuru（ヤリクル）",
+		template: "%s | YariKuru",
 	},
+	description: "予算の管理と可視化を行う Next.js アプリケーション",
 	icons: {
 		icon: "/icon_v6.png",
 		apple: "/icon_v6.png",
