@@ -126,7 +126,7 @@ export default function PrivacyPage() {
 								>
 									Googleのポリシーと規約
 								</a>
-								をご覧ください。また、ブラウザのアドオン設定等によりCookieを無効化するか、
+								をご覧ください。また、
 								<a
 									href="https://tools.google.com/dlpage/gaoptout"
 									target="_blank"
