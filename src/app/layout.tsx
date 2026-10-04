@@ -15,10 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
 	metadataBase: new URL("https://yarikuru.com"),
-	title: {
-		default: "YariKuru（ヤリクル）",
-		template: "%s | YariKuru",
-	},
+	title: "YariKuru（ヤリクル）",
 	description: "予算の管理と可視化を行う Next.js アプリケーション",
 	icons: {
 		icon: "/icon_v6.png",
