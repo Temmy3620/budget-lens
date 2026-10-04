@@ -26,6 +26,24 @@ export const metadata: Metadata = {
 	},
 };
 
+const jsonLd = {
+	"@context": "https://schema.org",
+	"@type": "WebApplication",
+	name: "YariKuru（ヤリクル）",
+	alternateName: "YariKuru",
+	url: "https://yarikuru.com",
+	description:
+		"固定費を除外した「自分でコントロールできるやりくり予算」だけに集中できる予算管理アプリ。直感的な円グラフと過去のスナップショット機能で、日々のやりくりをスマートにサポートします。",
+	applicationCategory: "FinanceApplication",
+	operatingSystem: "All",
+	browserRequirements: "Requires JavaScript. Requires HTML5.",
+	offers: {
+		"@type": "Offer",
+		price: "150",
+		priceCurrency: "JPY",
+	},
+};
+
 export default async function LandingPage() {
 	const supabase = await createClient();
 	const {
@@ -37,5 +55,10 @@ export default async function LandingPage() {
 		redirect("/dashboard");
 	}
 
-	return <LandingPageClient />;
+	return (
+		<>
+			<script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+			<LandingPageClient />
+		</>
+	);
 }
