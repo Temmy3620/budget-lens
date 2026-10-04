@@ -21,7 +21,7 @@ export default function PrivacyPage() {
 						<h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
 							プライバシーポリシー
 						</h1>
-						<p className="text-xs text-slate-400">最終改定日: 2026年8月30日</p>
+						<p className="text-xs text-slate-400">最終改定日: 2026年10月4日</p>
 					</div>
 
 					<div className="rounded-2xl border border-white/10 bg-[#080d28]/70 backdrop-blur-xl p-6 md:p-10 shadow-xl space-y-8 text-sm text-slate-300 leading-relaxed">
@@ -62,7 +62,7 @@ export default function PrivacyPage() {
 									<strong className="text-slate-200">
 										アクセスログ・Cookie:
 									</strong>{" "}
-									ログインセッション維持のためのCookie情報、アクセス日時、IPアドレスなど
+									ログインセッション維持のためのCookie情報、アクセス解析用Cookie、アクセス日時、閲覧ページ、IPアドレス、ブラウザ・端末情報など
 								</li>
 							</ul>
 						</section>
@@ -76,7 +76,9 @@ export default function PrivacyPage() {
 								<li>当サービスの提供・認証・機能の実行</li>
 								<li>有料プランの課金決済およびサブスクリプション管理</li>
 								<li>重要なお知らせやサポート対応、お問い合わせへの回答</li>
-								<li>サービスの改善、不具合の調査およびセキュリティ対策</li>
+								<li>
+									サービスの改善、利用状況の分析、不具合の調査およびセキュリティ対策
+								</li>
 							</ul>
 						</section>
 
@@ -85,7 +87,7 @@ export default function PrivacyPage() {
 								4. 外部委託・第三者提供
 							</h2>
 							<p>
-								当サービスは、法令に基づく場合を除き、事前の同意なく個人情報を第三者に提供することはありません。ただし、サービス運営に必要な範囲で以下の外部サービスへ業務委託を行っています。
+								当サービスは、法令に基づく場合を除き、事前の同意なく個人情報を第三者に提供することはありません。ただし、サービス運営に必要な範囲で以下の外部サービスへ業務委託およびデータ送信を行っています。
 							</p>
 							<ul className="list-disc pl-5 space-y-1.5 text-slate-400">
 								<li>
@@ -96,12 +98,50 @@ export default function PrivacyPage() {
 									<strong className="text-slate-200">Stripe:</strong>{" "}
 									オンライン決済代行およびサブスクリプション処理
 								</li>
+								<li>
+									<strong className="text-slate-200">
+										Google LLC（Google Analytics）:
+									</strong>{" "}
+									サービス利用状況の分析およびトラフィックデータの収集
+								</li>
 							</ul>
 						</section>
 
 						<section className="space-y-3">
 							<h2 className="text-base font-bold text-white border-b border-white/10 pb-2">
-								5. 安全管理措置（セキュリティ）
+								5. アクセス解析ツール（Google アナリティクス）について
+							</h2>
+							<p>
+								当サービスでは、利用状況の把握やサービス改善を目的として、Google
+								LLCが提供する「Google アナリティクス」を利用しています。Google
+								アナリティクスはトラフィックデータの収集のためにCookieを使用しています。このデータは匿名で収集されており、個人を特定するものではありません。
+							</p>
+							<p>
+								Googleによるアクセス情報の収集方法および利用方法については、
+								<a
+									href="https://policies.google.com/technologies/partner-sites"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-violet-400 hover:text-violet-300 underline underline-offset-4 mx-1"
+								>
+									Googleのポリシーと規約
+								</a>
+								をご覧ください。また、
+								<a
+									href="https://tools.google.com/dlpage/gaoptout"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-violet-400 hover:text-violet-300 underline underline-offset-4 mx-1"
+								>
+									Google アナリティクス オプトアウト アドオン
+								</a>
+								をご利用いただくことで、データ収集を無効にすることが可能です。
+							</p>
+						</section>
+
+						<section className="space-y-3">
+							<h2 className="text-base font-bold text-white border-b border-white/10 pb-2">
+								6. 安全管理措置（セキュリティ）
 							</h2>
 							<p>
 								当サービスは、ユーザーデータの保護のため、データベースの行レベルセキュリティ（RLS）による厳格なアクセス制御、通信経路の暗号化（SSL/TLS）、パスワードのハッシュ化など、適切な安全対策を講じています。
@@ -110,7 +150,7 @@ export default function PrivacyPage() {
 
 						<section className="space-y-3">
 							<h2 className="text-base font-bold text-white border-b border-white/10 pb-2">
-								6. 個人情報の開示・削除（退会）
+								7. 個人情報の開示・削除（退会）
 							</h2>
 							<p>
 								ユーザーは、アプリ内の設定画面よりいつでも自身の登録情報の確認、変更、およびアカウントの完全削除（退会）を行うことができます。退会手続きに伴い、ユーザーに紐づく個人データは速やかに抹消されます。
@@ -119,7 +159,7 @@ export default function PrivacyPage() {
 
 						<section className="space-y-3">
 							<h2 className="text-base font-bold text-white border-b border-white/10 pb-2">
-								7. お問い合わせ窓口
+								8. お問い合わせ窓口
 							</h2>
 							<p>
 								プライバシーポリシーに関するご質問やご相談は、
