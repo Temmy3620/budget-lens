@@ -39,7 +39,7 @@ const jsonLd = {
 	browserRequirements: "Requires JavaScript. Requires HTML5.",
 	offers: {
 		"@type": "Offer",
-		price: "0",
+		price: "150",
 		priceCurrency: "JPY",
 	},
 };
