@@ -315,14 +315,15 @@ export default function LandingPageClient() {
 								Concept & Philosophy
 							</div>
 
-							<h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-[1.25]">
+							<h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-[1.3]">
 								<span className="block">人の欲望は無限大。</span>
 								<span className="block mt-2 sm:mt-3">
-									だからこそ
-									<span className="inline-block whitespace-nowrap bg-gradient-to-r from-[#00d2ff] via-violet-400 to-[#d87cff] bg-clip-text text-transparent px-1">
-										「コントロールできるお金」
+									<span className="inline-block">だからこそ</span>{" "}
+									<span className="inline-block bg-gradient-to-r from-[#00d2ff] via-violet-400 to-[#d87cff] bg-clip-text text-transparent px-1">
+										<span className="inline-block">「コントロールできる</span>
+										<span className="inline-block">お金」</span>
 									</span>
-									に絞る
+									<span className="inline-block">に絞る</span>
 								</span>
 							</h2>
 
