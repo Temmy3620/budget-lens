@@ -4,15 +4,19 @@ import {
 	BarChart3,
 	CalendarDays,
 	ChevronRight,
+	Flame,
 	History,
 	Lock,
 	Mail,
 	Shield,
+	ShieldCheck,
 	Sparkles,
+	Target,
+	TrendingUp,
 } from "lucide-react";
+import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "motion/react";
 import Footer from "./navigation/footer";
 
 // イージング定義 (Sleek out-expo)
@@ -293,68 +297,123 @@ export default function LandingPageClient() {
 					</motion.div>
 				</section>
 
-				{/* ================= ② 共感セクション ================= */}
-				<section className="border-t border-white/5 bg-[#05081d]/40 py-24 relative">
-					<div className="max-w-4xl mx-auto px-6 text-center space-y-12">
+				{/* ================= ② コンセプト・フィロソフィー ================= */}
+				<section className="border-t border-white/5 bg-[#05081d]/50 py-24 lg:py-32 relative overflow-hidden">
+					{/* 背景光彩 */}
+					<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[500px] w-[700px] rounded-full bg-violet-600/10 blur-[150px] pointer-events-none" />
+
+					<div className="max-w-5xl mx-auto px-6 space-y-14">
+						{/* ヘッダー部分 */}
 						<motion.div
-							className="space-y-4"
+							className="space-y-6 text-center max-w-3xl mx-auto"
 							initial="hidden"
 							whileInView="visible"
 							viewport={{ once: true, margin: "-100px" }}
 							variants={fadeInScrollVariants}
 						>
-							<h2 className="text-xs font-bold tracking-widest text-[#00d2ff] uppercase">
-								Why YariKuru?
+							<div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#00d2ff]/30 bg-[#00d2ff]/10 text-xs font-semibold text-[#00d2ff] tracking-wider uppercase">
+								Concept & Philosophy
+							</div>
+
+							<h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-[1.3]">
+								<span className="block">人の欲望は無限大。</span>
+								<span className="block mt-2 sm:mt-3">
+									<span className="inline-block">だからこそ</span>{" "}
+									<span className="inline-block bg-gradient-to-r from-[#00d2ff] via-violet-400 to-[#d87cff] bg-clip-text text-transparent px-1">
+										<span className="inline-block">「コントロールできる</span>
+										<span className="inline-block">お金」</span>
+									</span>
+									<span className="inline-block">に絞る</span>
+								</span>
 							</h2>
-							<p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-snug">
-								「家計簿アプリの登録・連携、細かすぎて疲れていませんか？」
-							</p>
+
+							<div className="pt-2">
+								<p className="text-base sm:text-lg md:text-xl text-slate-300 font-medium leading-relaxed max-w-2xl mx-auto">
+									「毎月何にいくら使ったか」をすべて細かく記録しようとして、
+									<br className="hidden sm:inline" />
+									途中で疲れてやめてしまった経験はありませんか？
+								</p>
+							</div>
 						</motion.div>
 
-						<div className="grid md:grid-cols-2 gap-8 text-left mt-8">
+						{/* 固定費 vs 変動費の対比グリッド */}
+						<div className="grid md:grid-cols-2 gap-8 relative">
+							{/* 左：固定費 */}
 							<motion.div
-								className="rounded-xl border border-white/5 bg-slate-950/40 p-6 space-y-4"
+								className="rounded-2xl border border-white/5 bg-slate-900/40 p-8 space-y-5 relative overflow-hidden backdrop-blur-md"
 								initial="hidden"
 								whileInView="visible"
 								viewport={{ once: true, margin: "-100px" }}
 								variants={fadeInScrollVariants}
-								whileHover={{ y: -4, borderColor: "rgba(244, 63, 94, 0.2)" }}
+								whileHover={{ y: -4, borderColor: "rgba(255, 255, 255, 0.1)" }}
 								transition={{ duration: 0.3 }}
 							>
-								<div className="h-10 w-10 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 font-bold">
-									？
+								<div className="flex items-center justify-between">
+									<div className="h-11 w-11 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center text-slate-400">
+										<Lock className="h-5 w-5" />
+									</div>
+									<span className="text-[11px] font-semibold tracking-wider uppercase px-2.5 py-1 rounded-md bg-slate-800/80 text-slate-400 border border-slate-700/50">
+										自分では動かせないお金
+									</span>
 								</div>
-								<h3 className="text-lg font-bold text-white">
-									口座連携したけれど、動きが見えない
-								</h3>
-								<p className="text-slate-400 text-sm leading-relaxed">
-									クレジットカード明細や口座連携で全資産は見えるものの、税金・家賃などの「動かせない固定費」が混ざるため、日々使える生活費の残りが見えにくくなります。
-								</p>
+
+								<div className="space-y-3">
+									<h3 className="text-xl font-bold text-slate-200">
+										「固定費」を記録するストレス
+									</h3>
+									<p className="text-slate-400 text-sm leading-relaxed">
+										家賃や税金、通信費などの
+										<strong className="text-slate-200 font-medium">
+											「固定費」
+										</strong>
+										は、生きていくうえでどうしても出ていく、自分ではすぐには減らせないお金です。
+									</p>
+									<p className="text-slate-400 text-sm leading-relaxed">
+										これらを毎回細かく記録・管理しようとすること自体が、家計簿が続かない大きなストレスの原因になっています。
+									</p>
+								</div>
 							</motion.div>
 
+							{/* 右：変動費 */}
 							<motion.div
-								className="rounded-xl border border-white/5 bg-slate-950/40 p-6 space-y-4"
+								className="rounded-2xl border border-violet-500/30 bg-gradient-to-b from-violet-950/20 to-slate-950/60 p-8 space-y-5 relative overflow-hidden backdrop-blur-md shadow-[0_0_30px_rgba(139,92,246,0.1)]"
 								initial="hidden"
 								whileInView="visible"
 								viewport={{ once: true, margin: "-100px" }}
 								variants={fadeInScrollVariants}
-								whileHover={{ y: -4, borderColor: "rgba(244, 63, 94, 0.2)" }}
+								whileHover={{ y: -4, borderColor: "rgba(0, 210, 255, 0.4)" }}
 								transition={{ duration: 0.3 }}
 							>
-								<div className="h-10 w-10 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 font-bold">
-									？
+								<div className="flex items-center justify-between">
+									<div className="h-11 w-11 rounded-xl bg-violet-500/20 border border-violet-500/30 flex items-center justify-center text-[#00d2ff]">
+										<Flame className="h-5 w-5" />
+									</div>
+									<span className="text-[11px] font-semibold tracking-wider uppercase px-2.5 py-1 rounded-md bg-violet-500/10 text-violet-300 border border-violet-500/30">
+										意識ひとつで制限できるお金
+									</span>
 								</div>
-								<h3 className="text-lg font-bold text-white">
-									突発的な大出費で日常の記録がブレる
-								</h3>
-								<p className="text-slate-400 text-sm leading-relaxed">
-									年払いの保険や旅行代といった大きな出費が入った瞬間、いつもの生活費のグラフが跳ね上がり、今月の通常のやりくりが順調なのか分からなくなってしまいます。
-								</p>
+
+								<div className="space-y-3">
+									<h3 className="text-xl font-bold text-white">
+										欲望と隣り合わせの「変動費」
+									</h3>
+									<p className="text-slate-300 text-sm leading-relaxed">
+										ネットショッピングや推し活、趣味、日々の外食といった
+										<strong className="text-white font-semibold">
+											「変動費」
+										</strong>
+										は、自分の意識ひとつでコントロールできるお金です。
+									</p>
+									<p className="text-slate-300 text-sm leading-relaxed">
+										しかし、人の欲望には際限がありません。自制しないとお金は無限に出ていってしまうからこそ、特別な管理が必要です。
+									</p>
+								</div>
 							</motion.div>
 						</div>
 
+						{/* 結論：やりくり枠への集中 */}
 						<motion.div
-							className="p-8 rounded-2xl border border-[#00d2ff]/20 bg-gradient-to-r from-cyan-950/10 to-indigo-950/10 backdrop-blur-md max-w-3xl mx-auto space-y-4"
+							className="rounded-2xl border border-[#00d2ff]/30 bg-gradient-to-r from-cyan-950/20 via-violet-950/30 to-indigo-950/20 backdrop-blur-md p-8 md:p-10 text-center max-w-4xl mx-auto space-y-4 shadow-[0_0_40px_rgba(0,210,255,0.08)] relative"
 							initial="hidden"
 							whileInView="visible"
 							viewport={{ once: true, margin: "-100px" }}
@@ -362,18 +421,128 @@ export default function LandingPageClient() {
 							whileHover={{ scale: 1.01 }}
 							transition={{ duration: 0.3 }}
 						>
-							<h3 className="text-xl font-bold text-[#00d2ff]">
-								引き算の答え：日々の「やりくり予算」だけに集中する
-							</h3>
-							<p className="text-slate-300 text-sm leading-relaxed">
-								YariKuruは、日常的に削ったり増やしたりコントロールできる「やりくり費」だけの記録に特化。家賃や保険は除外し、今月の生活費だけで暮らす心地よさを提供します。自分で決めた予算の範囲内で「使いたい欲」を管理し、自然と欲望を抑制する習慣が身につきます。余分な機能を削ぎ落としたからこそ、続けられます。
+							<div className="inline-flex items-center gap-2 text-[#00d2ff] font-bold text-xs uppercase tracking-wider">
+								<Sparkles className="h-4 w-4" />
+								ストレスなくお金と上手に付き合う唯一のコツ
+							</div>
+							<p className="text-lg md:text-2xl font-bold text-white leading-relaxed">
+								「自分でコントロールできる支出だけに上限（やりくり枠）を決め、
+								<br className="hidden md:inline" />
+								<span className="bg-gradient-to-r from-[#00d2ff] via-violet-300 to-[#d87cff] bg-clip-text text-transparent">
+									そこだけを集中管理する
+								</span>
+								」
+							</p>
+							<p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
+								これが、無理な我慢や記録疲れから解放され、楽しく自制心とお金を両立させるYariKuruの哲学です。
 							</p>
 						</motion.div>
 					</div>
 				</section>
 
-				{/* ================= ③ 特徴・ベネフィットセクション ================= */}
-				<section className="max-w-7xl mx-auto px-6 py-24 lg:py-32 space-y-16">
+				{/* ================= ③ YariKuruが提供する3つの価値 ================= */}
+				<section className="max-w-7xl mx-auto px-6 py-24 lg:py-28 space-y-16">
+					<motion.div
+						className="text-center space-y-4 max-w-3xl mx-auto"
+						initial="hidden"
+						whileInView="visible"
+						viewport={{ once: true, margin: "-100px" }}
+						variants={fadeInScrollVariants}
+					>
+						<div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/10 text-xs font-semibold text-violet-400 tracking-wider uppercase">
+							Core Values
+						</div>
+						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight">
+							YariKuruが提供する3つの価値
+						</h2>
+						<p className="text-slate-400 text-base md:text-lg">
+							動かせないお金のノイズを取り払い、本当に大切な枠組みだけに意識を向けます。
+						</p>
+					</motion.div>
+
+					<div className="grid md:grid-cols-3 gap-8">
+						{/* 価値1 */}
+						<motion.div
+							className="rounded-2xl border border-white/5 bg-[#070b20]/60 p-8 hover:border-emerald-500/30 transition-all duration-300 group flex flex-col justify-between backdrop-blur-sm relative overflow-hidden"
+							initial="hidden"
+							whileInView="visible"
+							viewport={{ once: true, margin: "-80px" }}
+							variants={fadeInScrollVariants}
+							whileHover={{ y: -6, scale: 1.01 }}
+							whileTap={{ scale: 0.985 }}
+						>
+							<div className="space-y-5">
+								<div className="h-12 w-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+									<ShieldCheck className="h-6 w-6 text-white" />
+								</div>
+								<h3 className="text-xl font-bold text-white group-hover:text-emerald-300 transition-colors duration-200">
+									固定費管理のストレスをゼロに
+								</h3>
+								<p className="text-slate-400 text-sm leading-relaxed">
+									自分では動かせないお金のノイズを排除し、管理の手間を最小限にします。日々の記録に追われることがなくなります。
+								</p>
+							</div>
+							<div className="pt-6 border-t border-white/5 mt-6 text-xs text-emerald-400/80 font-medium">
+								手間と罪悪感の最小化
+							</div>
+						</motion.div>
+
+						{/* 価値2 */}
+						<motion.div
+							className="rounded-2xl border border-white/5 bg-[#070b20]/60 p-8 hover:border-violet-500/30 transition-all duration-300 group flex flex-col justify-between backdrop-blur-sm relative overflow-hidden"
+							initial="hidden"
+							whileInView="visible"
+							viewport={{ once: true, margin: "-80px" }}
+							variants={fadeInScrollVariants}
+							whileHover={{ y: -6, scale: 1.01 }}
+							whileTap={{ scale: 0.985 }}
+						>
+							<div className="space-y-5">
+								<div className="h-12 w-12 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center shadow-[0_0_20px_rgba(124,58,237,0.3)]">
+									<Target className="h-6 w-6 text-white" />
+								</div>
+								<h3 className="text-xl font-bold text-white group-hover:text-[#00d2ff] transition-colors duration-200">
+									「やりくり枠」を集中管理
+								</h3>
+								<p className="text-slate-400 text-sm leading-relaxed">
+									ネットショッピングや推し活など、予算を決めて管理することで「今月あといくら使えるか」が一目で直感的にわかります。
+								</p>
+							</div>
+							<div className="pt-6 border-t border-white/5 mt-6 text-xs text-violet-400/80 font-medium">
+								ネットショッピング・推し活・外食
+							</div>
+						</motion.div>
+
+						{/* 価値3 */}
+						<motion.div
+							className="rounded-2xl border border-white/5 bg-[#070b20]/60 p-8 hover:border-rose-500/30 transition-all duration-300 group flex flex-col justify-between backdrop-blur-sm relative overflow-hidden"
+							initial="hidden"
+							whileInView="visible"
+							viewport={{ once: true, margin: "-80px" }}
+							variants={fadeInScrollVariants}
+							whileHover={{ y: -6, scale: 1.01 }}
+							whileTap={{ scale: 0.985 }}
+						>
+							<div className="space-y-5">
+								<div className="h-12 w-12 rounded-xl bg-gradient-to-tr from-rose-600 to-amber-500 flex items-center justify-center shadow-[0_0_20px_rgba(244,63,94,0.3)]">
+									<TrendingUp className="h-6 w-6 text-white" />
+								</div>
+								<h3 className="text-xl font-bold text-white group-hover:text-rose-300 transition-colors duration-200">
+									無駄なお金が出ていくのを防ぐ
+								</h3>
+								<p className="text-slate-400 text-sm leading-relaxed">
+									あらかじめ決めた枠の中で楽しくやりくりし、自制心と安心感を両立させます。衝動買いを未然にコントロールできます。
+								</p>
+							</div>
+							<div className="pt-6 border-t border-white/5 mt-6 text-xs text-rose-400/80 font-medium">
+								自制心と安心感の両立
+							</div>
+						</motion.div>
+					</div>
+				</section>
+
+				{/* ================= ④ 特徴・機能セクション ================= */}
+				<section className="max-w-7xl mx-auto px-6 py-24 lg:py-32 space-y-16 border-t border-white/5">
 					<motion.div
 						className="text-center space-y-4"
 						initial="hidden"
@@ -385,7 +554,7 @@ export default function LandingPageClient() {
 							Features
 						</h2>
 						<p className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-							やりくりを楽しく、美しく続けるための3つの強み
+							やりくりを楽しく、美しく続けるための機能
 						</p>
 					</motion.div>
 
@@ -470,7 +639,7 @@ export default function LandingPageClient() {
 					</div>
 				</section>
 
-				{/* ================= ④ 使い方ステップ ================= */}
+				{/* ================= ⑤ 使い方ステップ ================= */}
 				<section className="border-t border-white/5 bg-[#05081d]/30 py-24 relative">
 					<div className="max-w-7xl mx-auto px-6 space-y-16">
 						<motion.div
@@ -544,7 +713,7 @@ export default function LandingPageClient() {
 					</div>
 				</section>
 
-				{/* ================= ⑤ セキュリティ・信頼性 ================= */}
+				{/* ================= ⑥ セキュリティ・信頼性 ================= */}
 				<section className="max-w-5xl mx-auto px-6 py-24 flex flex-col md:flex-row items-center gap-12">
 					<motion.div
 						className="flex-1 space-y-6"
@@ -592,7 +761,7 @@ export default function LandingPageClient() {
 					</motion.div>
 				</section>
 
-				{/* ================= ⑥ 料金プラン ================= */}
+				{/* ================= ⑦ 料金プラン ================= */}
 				<section className="border-t border-white/5 bg-[#05081d]/40 py-24">
 					<div className="max-w-7xl mx-auto px-6 space-y-16">
 						<motion.div
@@ -681,7 +850,7 @@ export default function LandingPageClient() {
 					</div>
 				</section>
 
-				{/* ================= ⑦ フッター前の最終CTA ================= */}
+				{/* ================= ⑧ フッター前の最終CTA ================= */}
 				<section className="relative py-24 lg:py-32 overflow-hidden border-t border-white/5">
 					<div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0c1b]/30 -z-10" />
 
